@@ -1,7 +1,7 @@
 ### directory structure
 - README.md **(you're reading me)**
 - analyses/ **(holds all specific objectives for processing data)**
-- data/ **(unprocessed data)**
+- raw_data/ **(unprocessed data)**
   - 1520_genomes/
 - lab_notebook.md **(daily log of activities)**
 
