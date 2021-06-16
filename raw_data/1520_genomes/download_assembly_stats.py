@@ -5,7 +5,7 @@ import pandas as pd
 import subprocess
 import sys
 
-accesions = sys.argv[1]
+accessions = sys.argv[1]
 
 column_names = ['accession_id',
                 'assembly',
@@ -74,7 +74,7 @@ def get_assembly_stats(stats_file, stats_dt):
     return stats_dt
 
 
-with open(accesions) as f:
+with open(accessions) as f:
     for i, line in enumerate(f):
         stats_dt = {}
         if i > 1:
