@@ -1,3 +1,5 @@
 .DS_Store
 __pycache__/*
 /raw_data/1520_genomes/genomes/*
+/code/readulator/*
+/analyses/1520_genomes_RAD_characteristics/test_5_genomes/*

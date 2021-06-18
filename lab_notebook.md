@@ -17,4 +17,4 @@ Objective: automatically download all accessions and provide summary statistics 
 
 Notes: The necessity to produce summary statistics for these assemblies for later analyses gave way to creating custom python scripts to pull the data. The custom scripts are stored in the /raw_data/genomes/1520_genomes directory with documentation.
 
-Results:
+Results: summary of all assembled genomes and assembly metrics automated for 1520 genomes
