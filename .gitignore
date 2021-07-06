@@ -1,5 +1,6 @@
 .DS_Store
 __pycache__/*
+*swp
 *fna
 *fna.gz
 *fastq
@@ -9,5 +10,3 @@ __pycache__/*
 output/
 genomes/
 /raw_data/1520_genomes/genomes/*
-/code/readulator/*
-/analyses/1520_genomes_RAD_characteristics/test_5_genomes/*
