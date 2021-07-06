@@ -6,6 +6,7 @@ __pycache__/*
 *fna.gz
 *fastq
 *fastq.gz
+code/kraken2
 output/
 genomes/
 /raw_data/1520_genomes/genomes/*

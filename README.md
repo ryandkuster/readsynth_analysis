@@ -152,3 +152,77 @@ Finally, a genome copy number of 20 for accession GCA_003433755:
 ## 2021.07.06
 ---
 ## **community profiling using Kraken2**
+
+https://github.com/DerrickWood/kraken2/wiki
+
+```
+spack list | grep 'kraken'
+
+kraken
+kraken2
+```
+
+kraken not installed:
+
+```
+spack load kraken2@2.0.8-beta
+
+==> Error: Spec 'kraken2@2.0.8-beta' matches no installed packages.
+```
+
+attempt manual install using spack:
+
+```
+spack install kraken2@2.0.8-beta
+
+
+==> Warning: gcc@8.3.1 cannot build optimized binaries for "zen2". Using best target possible: "zen"
+==> Error: Failed to acquire a write lock for berkeley-db-18.1.40-nebwsa4tt25wkohwwlzeikbln2unmipv due to LockROFileError: Can't take write lock on read-only file: /pickett_shared/spack/opt/spack/.spack-db/prefix_lock
+==> Error: Can't take write lock on read-only file: /pickett_shared/spack/opt/spack/.spack-db/prefix_lock
+```
+
+just installed version 2.0.7-beta using conda:
+
+```
+conda install -c bioconda kraken2
+kraken2 --version
+Kraken version 2.0.7-beta
+Copyright 2013-2018, Derrick Wood (dwood@cs.jhu.edu)
+```
+
+build the kraken2 database using the subsetted bacteria library:
+
+```
+mkdir bacteria_db
+kraken2-build --download-library bacteria --db ./bacteria_db/
+
+Step 1/2: Performing rsync file transfer of requested files                                                                                                    
+Rsync file transfer complete.                                                                                                                                  
+Step 2/2: Assigning taxonomic IDs to sequences                                                                                                                 
+Processed 25876 projects (59362 sequences, 107.02 Gbp)... done.                                                                                                
+All files processed, cleaning up extra sequence files... done, library complete.                                                                               
+Masking low-complexity regions of downloaded library... done.
+```
+
+...version 2.0.7-beta is no longer compatible with downloading from the NCBI database and building the kraken2 database with taxonomy
+
+```
+git clone https://github.com/DerrickWood/kraken2.git
+
+cd kraken2
+
+./install_kraken2.sh /pickett_flora/projects/read_simulation/code/kraken2
+```
+
+time to attempt building the standard database:
+
+```
+mkdir standard_db
+/pickett_flora/projects/read_simulation/code/kraken2/kraken2-build --standard --threads 10 --db standard_db/
+```
+
+using the above library, align the paired-end fastq mock community reads created with readsynth.py
+
+```
+kraken2 --paired --threads 12 --classified-out cseqs#.fq --unclassified-out useqs#.fq --db ./bacteria_db seqs_1.fq seqs_2.fq
+```
