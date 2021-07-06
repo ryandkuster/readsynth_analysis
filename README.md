@@ -80,11 +80,11 @@ for every template strand ('+') from the raw_digest...csv file, pull the total n
 
 The R file 1520_genomes_stats.R creates correlation plots for the read fragment lengths and various characteristics of the genome assemblies and genome size and gc content.
 
-![correlation plot of all variables](https://github.com/ryandkuster/read_simulation/misc/visuals/correlation.png)
+![correlation plot of all variables](https://github.com/ryandkuster/read_simulation/blob/main/misc/visuals/correlation.png)
 
 After normalizing the fragment counts per genome (count/genome(bp)), the most notable relationship is the negative correlation of gc_ratio and framents in the 1 to 200 bp range:
 
-![scatter plot of gc and 1 - 200 bp fragments](https://github.com/ryandkuster/read_simulation/misc/visuals/gc_ratio_and_fragments_plot.png)
+![scatter plot of gc and 1 - 200 bp fragments](https://github.com/ryandkuster/read_simulation/blob/main/misc/visuals/gc_ratio_and_fragments_plot.png)
 
 
 ## 2021.06.30
@@ -133,21 +133,21 @@ readsynth.py from commit 4df8ce1f90394987637b4a83443ec53e808c1af2
 
 The readsynth.py code was updated to more accurately represent the composition of the original genome size. For example, a complete digest with no R1/R2 orientation will produce an equal number of fragments on the template and non-template strands, so the sampled distribution should represent half this distribution (shown below in orange).
 
-![sampling from complete digest at 1 X](https://github.com/ryandkuster/read_simulation/misc/visuals/hist_sampled_half_chr_1_complete.png)
+![sampling from complete digest at 1 X](https://github.com/ryandkuster/read_simulation/blob/main/misc/visuals/hist_sampled_half_chr_1_complete.png)
 
 Similarly, using an incomplete digest will produce an overabundance of fragments from some parts of the genome, and a weighting system must account for this. The figure below details an incomplete digest distribution (blue) with the weight-adjusted sampling distribution approximating 1x representation of the original genome (note the count similarity to the complete digest above).
 
-![sampling from incomplete digest at 1 X](https://github.com/ryandkuster/read_simulation/misc/visuals/hist_sampled_half_chr_1_incomplete.png)
+![sampling from incomplete digest at 1 X](https://github.com/ryandkuster/read_simulation/blob/main/misc/visuals/hist_sampled_half_chr_1_incomplete.png)
 
 Importantly, simulating complete EcoR1/MseI digests where R1/R2 adapters ligate in a 5' to 3' specific manner requires weight consideration to accurately approximate genome copy number. Complete digests with orientation won't encounter overlap at any point on either template or non-template strands.
 
 An example from today's simulation from the GCA_003468235 accession using 4 as the original genome copy number:
 
-![4 X coverage example](https://github.com/ryandkuster/read_simulation/misc/visuals/GCA_003468235_4X.png)
+![4 X coverage example](https://github.com/ryandkuster/read_simulation/blob/main/misc/visuals/GCA_003468235_4X.png)
 
 Finally, a genome copy number of 20 for accession GCA_003433755:
 
-![20 X coverage example](https://github.com/ryandkuster/read_simulation/misc/visuals/GCA_003433755_20X.png)
+![20 X coverage example](https://github.com/ryandkuster/read_simulation/blob/main/misc/visuals/GCA_003433755_20X.png)
 
 ## 2021.07.06
 ---
