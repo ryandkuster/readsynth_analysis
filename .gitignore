@@ -6,8 +6,6 @@ __pycache__/*
 *fna.gz
 *fastq
 *fastq.gz
-*png
-*csv
 output/
 genomes/
 /raw_data/1520_genomes/genomes/*
