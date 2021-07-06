@@ -1,1 +1,0 @@
-### in silico digest each of the 1,520 genomes using MseI and EcoRI motifs using 'readulator' scripts. For the purposes of exploratory analysis, only RE digestion (complete) will be performed using complete digestion.
