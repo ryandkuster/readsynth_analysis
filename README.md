@@ -153,11 +153,12 @@ Finally, a genome copy number of 20 for accession GCA_003433755:
 ---
 ## **community profiling using Kraken2**
 
+*<sub><sup>/pickett_flora/projects/read_simulation/analyses/1520_genomes_RAD_characteristics/2021_06_30_quantify_30_genomes/3_profile_simulated_samples/</sub></sup>*
+
 https://github.com/DerrickWood/kraken2/wiki
 
 ```
 spack list | grep 'kraken'
-
 kraken
 kraken2
 ```
@@ -166,22 +167,19 @@ kraken not installed:
 
 ```
 spack load kraken2@2.0.8-beta
-
 ==> Error: Spec 'kraken2@2.0.8-beta' matches no installed packages.
 ```
 
-attempt manual install using spack:
+Attempt manual install using spack:
 
 ```
 spack install kraken2@2.0.8-beta
-
-
 ==> Warning: gcc@8.3.1 cannot build optimized binaries for "zen2". Using best target possible: "zen"
 ==> Error: Failed to acquire a write lock for berkeley-db-18.1.40-nebwsa4tt25wkohwwlzeikbln2unmipv due to LockROFileError: Can't take write lock on read-only file: /pickett_shared/spack/opt/spack/.spack-db/prefix_lock
 ==> Error: Can't take write lock on read-only file: /pickett_shared/spack/opt/spack/.spack-db/prefix_lock
 ```
 
-just installed version 2.0.7-beta using conda:
+I installed version 2.0.7-beta using conda:
 
 ```
 conda install -c bioconda kraken2
@@ -190,12 +188,11 @@ Kraken version 2.0.7-beta
 Copyright 2013-2018, Derrick Wood (dwood@cs.jhu.edu)
 ```
 
-build the kraken2 database using the subsetted bacteria library:
+Then built the kraken2 database using the subsetted bacteria library:
 
 ```
 mkdir bacteria_db
 kraken2-build --download-library bacteria --db ./bacteria_db/
-
 Step 1/2: Performing rsync file transfer of requested files                                                                                                    
 Rsync file transfer complete.                                                                                                                                  
 Step 2/2: Assigning taxonomic IDs to sequences                                                                                                                 
@@ -204,25 +201,59 @@ All files processed, cleaning up extra sequence files... done, library complete.
 Masking low-complexity regions of downloaded library... done.
 ```
 
-...version 2.0.7-beta is no longer compatible with downloading from the NCBI database and building the kraken2 database with taxonomy
+version 2.0.7-beta is no longer compatible with downloading from the NCBI database and building the kraken2 database with taxonomy
 
 ```
 git clone https://github.com/DerrickWood/kraken2.git
-
 cd kraken2
-
 ./install_kraken2.sh /pickett_flora/projects/read_simulation/code/kraken2
 ```
 
-time to attempt building the standard database:
+Attempt building the standard database after uninstalling the conda kraken2 packaged (important as it has global tools in PATH that are outdated). To avoid installing the NCBI dustmasker and segmasker tools, use the --no-masking argument.
 
 ```
 mkdir standard_db
-/pickett_flora/projects/read_simulation/code/kraken2/kraken2-build --standard --threads 10 --db standard_db/
+/pickett_flora/projects/read_simulation/code/kraken2/kraken2-build --standard --no-masking --threads 10 --db standard_db/
 ```
 
-using the above library, align the paired-end fastq mock community reads created with readsynth.py
+This failed for rsync reasons documented in current GitHub issues. A simple workaround is to download premade databases stored at https://benlangmead.github.io/aws-indexes/k2.
+
+
+## 2021.07.07
+---
+## **community profiling using Kraken2 and Bracken**
 
 ```
-kraken2 --paired --threads 12 --classified-out cseqs#.fq --unclassified-out useqs#.fq --db ./bacteria_db seqs_1.fq seqs_2.fq
+cd ./standard_db
+wget https://genome-idx.s3.amazonaws.com/kraken/k2_standard_20210517.tar.gz
+tar -xvzf k2_standard_16gb_20210517.tar.gz
+rm k2_standard_16gb_20210517.tar.gz
+cd ..
 ```
+
+Using the above library, align the paired-end fastq mock community reads created with readsynth.py.
+
+```
+cp ../2_simulate_fastq_files/2021_06_30_combined_R1.fastq ./
+cp ../2_simulate_fastq_files/2021_06_30_combined_R2.fastq ./
+/pickett_flora/projects/read_simulation/code/kraken2/kraken2 --paired --threads 12 --report 2021_07_07.kreport --classified-out cseqs#.fq --unclassified-out useqs#.fq --db ./standard_db 2021_06_30_combined_R1.fastq 2021_06_30_combined_R2.fastq > 2021_07_07_run.txt
+Loading database information... done.                                                                                                                          
+875990 sequences (438.00 Mbp) processed in 1.284s (40919.3 Kseq/m, 20459.63 Mbp/m).                                                                            
+  679276 sequences classified (77.54%)                                                                                                                         
+  196714 sequences unclassified (22.46%) 
+```
+
+Using the README at https://github.com/jenniferlu717/Bracken/ as a guide.
+
+Run Bracken for abundance estimation using 10 as the default -t threshold level ("any species with <= 10 (or otherwise specified) reads will not receive any additional reads from higher taxonomy levels when distributing reads for abundance estimation"). The -r argument is read length (our mock communities are at 250bp), and the -l level value of S for species.
+
+```
+/pickett_flora/projects/read_simulation/code/Bracken/bracken -d ./standard_db/ -i 2021_07_07.kreport -o 2021_07_07.bracken -r 250 -l S -t 10
+```
+
+## **comparing Bracken abundance profiles with fastq files and input abundance keys**
+*<sub><sup>/pickett_flora/projects/read_simulation/analyses/1520_genomes_RAD_characteristics/2021_06_30_quantify_30_genomes</sub></sup>*
+
+First, the abundance of reads in the fastq file must be considered as separate from the key file, as GC content of the source genome is expected to skew the number of fragments.
+
+Second, the original key file needs to be reflected as a percentage of total reads on a per taxid basis.
