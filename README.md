@@ -223,6 +223,9 @@ This failed for rsync reasons documented in current GitHub issues. A simple work
 ---
 ## **community profiling using Kraken2 and Bracken**
 
+using Kraken2 from commit 84b2874e0ba5ffc9abaebe630433a430cd0f69f4
+using Bracken from commit b014034d5c0efa7c4cb3eb9c1f0913c09cdce728
+
 ```
 cd ./standard_db
 wget https://genome-idx.s3.amazonaws.com/kraken/k2_standard_20210517.tar.gz
@@ -238,9 +241,9 @@ cp ../2_simulate_fastq_files/2021_06_30_combined_R1.fastq ./
 cp ../2_simulate_fastq_files/2021_06_30_combined_R2.fastq ./
 /pickett_flora/projects/read_simulation/code/kraken2/kraken2 --paired --threads 12 --report 2021_07_07.kreport --classified-out cseqs#.fq --unclassified-out useqs#.fq --db ./standard_db 2021_06_30_combined_R1.fastq 2021_06_30_combined_R2.fastq > 2021_07_07_run.txt
 Loading database information... done.                                                                                                                          
-875990 sequences (438.00 Mbp) processed in 1.284s (40919.3 Kseq/m, 20459.63 Mbp/m).                                                                            
-  679276 sequences classified (77.54%)                                                                                                                         
-  196714 sequences unclassified (22.46%) 
+875990 sequences (438.00 Mbp) processed in 1.284s (40919.3 Kseq/m, 20459.63 Mbp/m).
+  679276 sequences classified (77.54%)
+  196714 sequences unclassified (22.46%)
 ```
 
 Using the README at https://github.com/jenniferlu717/Bracken/ as a guide.
@@ -254,6 +257,20 @@ Run Bracken for abundance estimation using 10 as the default -t threshold level 
 ## **comparing Bracken abundance profiles with fastq files and input abundance keys**
 *<sub><sup>/pickett_flora/projects/read_simulation/analyses/1520_genomes_RAD_characteristics/2021_06_30_quantify_30_genomes</sub></sup>*
 
-First, the abundance of reads in the fastq file must be considered as separate from the key file, as GC content of the source genome is expected to skew the number of fragments.
+First, the abundance of reads in the fastq file must be considered as separate from the key file, as GC content of the source genome is expected to skew the number of fragments. Second, the original key file needs to be reflected as a percentage of total reads on a per taxid basis.
 
-Second, the original key file needs to be reflected as a percentage of total reads on a per taxid basis.
+Grab the header lines only (R2 file will be the same, so only R1 is needed):
+
+```
+cp ../2_simulate_fastq_files/2021_06_30_combined_R1.fastq ./
+sed -n '1~4p' 2021_06_30_combined_R1.fastq > R1_headers.txt
+```
+
+Then, run 'count_fq_taxids.py' to collect the relevant information from the key file and the previously created digested_genome_stats.csv file from 2021_06_28:
+
+```
+cp ../../2021_06_28_test_1520_genomes/2_pull_digest_stats/digested_genome_stats.csv ./
+python3 count_fq_taxids.py R1_headers.txt sampled_files_key.txt digested_genome_stats.csv
+```
+
+The resulting sampled_genome_stats.csv will contain the original abundances from the key ('copies'), the ratio of these copies vs. the total copies produced in the key file ('copy_ratio'), the count of fastq reads per sample ('reads'), and these reads as a ratio to the total reads in the simulated fastq file ('read_ratio').
