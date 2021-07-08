@@ -42,10 +42,10 @@ for idx, row in df.iterrows():
             read_ratio_ls.append(v/read_total)
             tmp_df = df_stats.loc[df_stats['accession_id'] == k]
             final_df = pd.concat([final_df, tmp_df])
-
+final_df.reset_index(inplace=True, drop=True)
 final_df['copies'] = df['copies']
 final_df['copy_ratio'] = copy_ratio_ls
 final_df['reads'] = read_ls
 final_df['read_ratio'] = read_ratio_ls
-
+print(final_df)
 final_df.to_csv('sampled_genome_stats.csv', index=None)
