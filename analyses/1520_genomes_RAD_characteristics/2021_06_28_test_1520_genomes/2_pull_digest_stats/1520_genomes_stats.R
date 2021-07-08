@@ -1,6 +1,8 @@
 library(corrplot)
 library(ggplot2)
 
+
+setwd("~/github/read_simulation/analyses/1520_genomes_RAD_characteristics/2021_06_28_test_1520_genomes/2_pull_digest_stats")
 df = read.csv(file='digested_genome_stats.csv')
 df$gc_ratio = df$total_gc / (df$total_all_ls - df$total_n_ls)
 df$normalized_frags_total = df$frags_total / df$total.length
@@ -14,7 +16,7 @@ mydata = df[c(10:37)]
 # remove columns with missing data
 mydata = mydata[ , -which(names(mydata) %in% c("unspanned.gaps","region.count","molecule.count"))]
 mydata.cor = cor(mydata, use = "pairwise.complete.obs")
-corrplot(mydata.cor)
+corrplot(diag = F, method = "color", mydata.cor)
 
 ggplot(mydata, aes(x=gc_ratio, y=normalized_frags_1_to_200)) +
   geom_point(size=3, shape=15, alpha=0.15, color="black") +
