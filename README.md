@@ -252,6 +252,7 @@ Run Bracken for abundance estimation using 10 as the default -t threshold level 
 
 ```
 /pickett_flora/projects/read_simulation/code/Bracken/bracken -d ./standard_db/ -i 2021_07_07.kreport -o 2021_07_07.bracken -r 250 -l S -t 10
+/pickett_flora/projects/read_simulation/code/Bracken/bracken -d ./standard_db/ -i 2021_07_07.kreport -o 2021_07_07_G.bracken -r 250 -l G -t 10
 ```
 
 ## **comparing Bracken abundance profiles with fastq files and input abundance keys**
@@ -274,3 +275,7 @@ python3 count_fq_taxids.py R1_headers.txt sampled_files_key.txt digested_genome_
 ```
 
 The resulting sampled_genome_stats.csv will contain the original abundances from the key ('copies'), the ratio of these copies vs. the total copies produced in the key file ('copy_ratio'), the count of fastq reads per sample ('reads'), and these reads as a ratio to the total reads in the simulated fastq file ('read_ratio').
+
+```
+python3 pull_bracken_levels.py ../3_profile_simulated_samples/2021_07_07_bracken_genuses.kreport G sampled_genome_stats.csv
+```
