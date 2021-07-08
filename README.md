@@ -274,3 +274,5 @@ python3 count_fq_taxids.py R1_headers.txt sampled_files_key.txt digested_genome_
 ```
 
 The resulting sampled_genome_stats.csv will contain the original abundances from the key ('copies'), the ratio of these copies vs. the total copies produced in the key file ('copy_ratio'), the count of fastq reads per sample ('reads'), and these reads as a ratio to the total reads in the simulated fastq file ('read_ratio').
+
+![correlation plot comparing original key vs. simulated fastq abundance profiles](https://github.com/ryandkuster/read_simulation/blob/main/misc/visuals/abundance_corr.png)
