@@ -283,3 +283,19 @@ To pull the Bracken abundances (only at the genus level):
 ```
 python3 pull_bracken_levels.py ../3_profile_simulated_samples/2021_07_07_bracken_genuses.kreport G sampled_genome_stats.csv
 ```
+
+After collapsing the 30 reads into the genus level, the following visuals were produced. In general, the Bracken results closely match the expected values in most genera. We can see four groups (Ruminococcus, Lachnospira, Blautia, Clostridium, and an unidentified genome) that were detected at much lower levels than expected.
+
+![correlation plot comparing original key copies with the bracken output](https://github.com/ryandkuster/read_simulation/blob/main/misc/visuals/bracken_to_reads_plot.png)
+
+The following plot shows the underlying relationship between the input key copies and the resulting fastq read counts:
+
+![correlation plot comparing original key copies with the reads](https://github.com/ryandkuster/read_simulation/blob/main/misc/visuals/reads_to_copy_plot.png)
+
+After considering GC content, we see there is an underlying issue in the dataset. The original key file, by chance, gave lower abundances to GC-rich organisms.
+
+![correlation plot comparing original key copies with the bracken output](https://github.com/ryandkuster/read_simulation/blob/main/misc/visuals/gc_ratio_in_key_plot.png)
+
+However, this does not fully explain the outcome of Bracken. Bracken did appear to perform best with genomes containing lower GC content.
+
+![correlation plot comparing original key copies with the bracken output](https://github.com/ryandkuster/read_simulation/blob/main/misc/visuals/3d_plot.png)
