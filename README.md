@@ -239,7 +239,7 @@ Using the above library, align the paired-end fastq mock community reads created
 ```
 cp ../2_simulate_fastq_files/2021_06_30_combined_R1.fastq ./
 cp ../2_simulate_fastq_files/2021_06_30_combined_R2.fastq ./
-/pickett_flora/projects/read_simulation/code/kraken2/kraken2 --paired --threads 12 --report 2021_07_07.kreport --classified-out cseqs#.fq --unclassified-out useqs#.fq --db ./standard_db 2021_06_30_combined_R1.fastq 2021_06_30_combined_R2.fastq > 2021_07_07_run.txt
+/pickett_flora/projects/read_simulation/code/kraken2/kraken2 --paired --threads 12 --report 2021_07_07.kreport --classified-out cseqs#.fq --unclassified-out useqs#.fq --db /pickett_flora/projects/read_simulation/raw_data/standard_db/ 2021_06_30_combined_R1.fastq 2021_06_30_combined_R2.fastq > 2021_07_07_run.txt
 Loading database information... done.                                                                                                                          
 875990 sequences (438.00 Mbp) processed in 1.284s (40919.3 Kseq/m, 20459.63 Mbp/m).
   679276 sequences classified (77.54%)
@@ -251,8 +251,8 @@ Using the README at https://github.com/jenniferlu717/Bracken/ as a guide.
 Run Bracken for abundance estimation using 10 as the default -t threshold level ("any species with <= 10 (or otherwise specified) reads will not receive any additional reads from higher taxonomy levels when distributing reads for abundance estimation"). The -r argument is read length (our mock communities are at 250bp), and the -l level value of S for species.
 
 ```
-/pickett_flora/projects/read_simulation/code/Bracken/bracken -d ./standard_db/ -i 2021_07_07.kreport -o 2021_07_07.bracken -r 250 -l S -t 10
-/pickett_flora/projects/read_simulation/code/Bracken/bracken -d ./standard_db/ -i 2021_07_07.kreport -o 2021_07_07_G.bracken -r 250 -l G -t 10
+/pickett_flora/projects/read_simulation/code/Bracken/bracken -d /pickett_flora/projects/read_simulation/raw_data/standard_db/ -i 2021_07_07.kreport -o 2021_07_07.bracken -r 250 -l S -t 10
+/pickett_flora/projects/read_simulation/code/Bracken/bracken -d /pickett_flora/projects/read_simulation/raw_data/standard_db/ -i 2021_07_07.kreport -o 2021_07_07_G.bracken -r 250 -l G -t 10
 ```
 
 ## **comparing Bracken abundance profiles with fastq files and input abundance keys**
@@ -299,3 +299,80 @@ After considering GC content, we see there is an underlying issue in the dataset
 However, this does not fully explain the outcome of Bracken. Bracken did appear to perform best with genomes containing lower GC content.
 
 ![correlation plot comparing original key copies with the bracken output](https://github.com/ryandkuster/read_simulation/blob/main/misc/visuals/3d_plot.png)
+
+## 2021.07.09
+---
+## **profiling Liu 2017 datasets using Kraken2 and Bracken**
+
+Download the datasets:
+
+```
+wget https://sra-pub-run-odp.s3.amazonaws.com/sra/SRR5298272/SRR5298272
+wget https://sra-pub-run-odp.s3.amazonaws.com/sra/SRR5298274/SRR5298274
+wget https://sra-pub-run-odp.s3.amazonaws.com/sra/SRR5360684/SRR5360684
+
+spack load sratoolkit@2.10.7
+
+fastq-dump SRR5298272
+fastq-dump SRR5298274
+fastq-dump SRR5360684
+```
+
+The files are paired-end, but can't be split using the expected fastq-dump flags, so we'll just manually do it:
+
+```
+sed -n '1~8p;2~8p;3~8p;4~8p' SRR5298272.fastq > SRR5298272_R1.fastq                                                           
+sed -n '5~8p;6~8p;7~8p;8~8p' SRR5298272.fastq > SRR5298272_R2.fastq
+sed -n '1~8p;2~8p;3~8p;4~8p' SRR5298274.fastq > SRR5298274_R1.fastq                                                           
+sed -n '5~8p;6~8p;7~8p;8~8p' SRR5298274.fastq > SRR5298274_R2.fastq
+sed -n '1~8p;2~8p;3~8p;4~8p' SRR5360684.fastq > SRR5360684_R1.fastq                                                           
+sed -n '5~8p;6~8p;7~8p;8~8p' SRR5360684.fastq > SRR5360684_R2.fastq
+```
+
+There.
+*<sub><sup>/pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/1_profile_reads</sub></sup>*
+
+Run Kraken as before:
+
+```
+/pickett_flora/projects/read_simulation/code/kraken2/kraken2 --paired --threads 12 --report 2021_07_09.kreport --classified-out cseqs#.fq --unclassified-out useqs#.fq --db /pickett_flora/projects/read_simulation/raw_data/standard_db/ SRR5298272_R1.fastq SRR5298272_R2.fastq > 2021_07_09_run.txt
+
+/pickett_flora/projects/read_simulation/code/Bracken/bracken -d /pickett_flora/projects/read_simulation/raw_data/standard_db/ -i 2021_07_09.kreport -o 2021_07_09.bracken -r 75 -l S -t 10
+```
+
+Find the top hits:
+
+```
+python3 ../pull_kracken_taxids.py cseqs_1.fq
+```
+
+The three most prevalent taxa were 816 (Bacteroides), 853 (Faecalibacterium prausnitzii), and 74426 (Collinsella aerofaciens).
+
+*<sub><sup>/pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2_simulate_f_prausnitzii</sub></sup>*
+
+Download F. prausnitzii
+
+```
+wget "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/003/312/465/GCF_003312465.1_ASM331246v1/GCF_003312465.1_ASM331246v1_genomic.fna.gz"
+```
+
+Run readsynth.py (commit )
+
+```
+python3 /home/rkuster/readsynth/readsynth.py \
+   -genome GCF_003312465.1_ASM331246v1_genomic.fna \
+   -o ./output \
+   -m1 CATG/ \
+   -m2 A/CGT \
+   -n 1 \
+   -l 76 \
+   -complete 1 \
+   -mean 550 \
+   -sd 50 \
+   -a1 /pickett_flora/projects/read_simulation/raw_data/adapters/liu_ddRADseq/liu_ddRADseq_adapters_R1.txt \                                               
+   -a2 /pickett_flora/projects/read_simulation/raw_data/adapters/liu_ddRADseq/liu_ddRADseq_adapters_R2.txt \                                               
+   -a1s 72 \
+   -a2s 71
+```
+
+## **map reads from kracken assignments and reads from above simulation of F. praustnitzii to compare sites and depth**
