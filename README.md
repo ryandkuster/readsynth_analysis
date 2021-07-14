@@ -271,7 +271,7 @@ Then, run 'count_fq_taxids.py' to collect the relevant information from the key 
 
 ```
 cp ../../2021_06_28_test_1520_genomes/2_pull_digest_stats/digested_genome_stats.csv ./
-python3 count_fq_taxids.py R1_headers.txt sampled_files_key.txt digested_genome_stats.csv
+python3 /pickett_flora/projects/read_simulation/code/scripts/count_fq_taxids.py R1_headers.txt sampled_files_key.txt digested_genome_stats.csv
 ```
 
 The resulting sampled_genome_stats.csv will contain the original abundances from the key ('copies'), the ratio of these copies vs. the total copies produced in the key file ('copy_ratio'), the count of fastq reads per sample ('reads'), and these reads as a ratio to the total reads in the simulated fastq file ('read_ratio').
@@ -281,8 +281,10 @@ The resulting sampled_genome_stats.csv will contain the original abundances from
 To pull the Bracken abundances (only at the genus level):
 
 ```
-python3 pull_bracken_levels.py ../3_profile_simulated_samples/2021_07_07_bracken_genuses.kreport G sampled_genome_stats.csv
+python3 /pickett_flora/projects/read_simulation/code/scripts/pull_bracken_levels.py ../3_profile_simulated_samples/2021_07_07_bracken_genuses.kreport G sampled_genome_stats.csv
 ```
+
+This will produce the profiled_genome_stats.csv file.
 
 After collapsing the 30 reads into the genus level, the following visuals were produced. In general, the Bracken results closely match the expected values in most genera. We can see four groups (Ruminococcus, Lachnospira, Blautia, Clostridium, and an unidentified genome) that were detected at much lower levels than expected.
 
@@ -343,7 +345,8 @@ Run Kraken as before:
 Find the top hits:
 
 ```
-python3 ../pull_kracken_taxids.py cseqs_1.fq
+python3 /pickett_flora/projects/read_simulation/code/scripts/pull_kraken_taxids.py cseqs_1.fq
+python3 /pickett_flora/projects/read_simulation/code/scripts/pull_kraken_taxids.py cseqs_2.fq
 ```
 
 The three most prevalent taxa were 816 (Bacteroides), 853 (Faecalibacterium prausnitzii), and 74426 (Collinsella aerofaciens).
@@ -356,9 +359,10 @@ Download F. prausnitzii
 wget "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/003/312/465/GCF_003312465.1_ASM331246v1/GCF_003312465.1_ASM331246v1_genomic.fna.gz"
 ```
 
-Run readsynth.py (commit )
+Run readsynth.py (commit 4df8ce1f90394987637b4a83443ec53e808c1af2)
 
 ```
+cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2_simulate_f_prausnitzii
 python3 /home/rkuster/readsynth/readsynth.py \
    -genome GCF_003312465.1_ASM331246v1_genomic.fna \
    -o ./output \
@@ -375,4 +379,122 @@ python3 /home/rkuster/readsynth/readsynth.py \
    -a2s 71
 ```
 
-## **map reads from kracken assignments and reads from above simulation of F. praustnitzii to compare sites and depth**
+## 2021.07.12
+---
+## **map reads from kraken assignments and reads from above simulation of F. prausnitzii to compare sites and depth**
+
+*<sub><sup>/pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/3_compare_rms_to_sim_mapping</sub></sup>*
+
+Grab the reads for each of the three Liu datasets that Kraken identified as F. prausnitzii.
+
+```
+python3 /pickett_flora/projects/read_simulation/code/scripts/pull_kraken_reads.py ../../1_profile_reads/SRR5298272/cseqs_1.fq 853
+python3 /pickett_flora/projects/read_simulation/code/scripts/pull_kraken_reads.py ../../1_profile_reads/SRR5298272/cseqs_2.fq 853
+```
+
+To BWA map the reads without error due to fastq naming discrepency, rename the R2 headers to be identical with R1:
+
+```
+python3 /pickett_flora/projects/read_simulation/code/scripts/fix_R2_headers.py taxid_853_cseqs_2.fq
+```
+
+BWA map reads from RMS project and reads simulated from readsynth.py to the F. prausnitzii genome.
+
+```
+spack load bwa@0.7.17
+spack load samtools@1.10
+cp ../2_simulate_f_prausnitzii/GCF_003312465.1_ASM331246v1_genomic.fna ./
+bwa index GCF_003312465.1_ASM331246v1_genomic.fna
+
+cd SRR5298272
+bwa mem ../GCF_003312465.1_ASM331246v1_genomic.fna taxid_853_cseqs_1.fq modified_taxid_853_cseqs_2.fq > SRR5298272.sam
+samtools view -b SRR5298272.sam > SRR5298272.bam
+samtools sort -o SRR5298272.sorted.bam SRR5298272.bam
+samtools index SRR5298272.sorted.bam
+samtools depth -o SRR5298272.depth.txt -H SRR5298272.sorted.bam
+python3 /pickett_flora/projects/read_simulation/code/scripts/get_samtools_avg_depth.py SRR5298272.depth.txt
+12.762109703977144
+cd ..
+
+cd SRR5298274
+bwa mem ../GCF_003312465.1_ASM331246v1_genomic.fna taxid_853_cseqs_1.fq modified_taxid_853_cseqs_2.fq > SRR5298274.sam
+samtools view -b SRR5298274.sam > SRR5298274.bam
+samtools sort -o SRR5298274.sorted.bam SRR5298274.bam
+samtools index SRR5298274.sorted.bam
+samtools depth -o SRR5298274.depth.txt -H SRR5298274.sorted.bam
+python3 /pickett_flora/projects/read_simulation/code/scripts/get_samtools_avg_depth.py SRR5298274.depth.txt
+4.958139806567638
+cd ..
+
+cd SRR5360684
+bwa mem ../GCF_003312465.1_ASM331246v1_genomic.fna taxid_853_cseqs_1.fq modified_taxid_853_cseqs_2.fq > SRR5360684.sam
+samtools view -b SRR5360684.sam > SRR5360684.bam
+samtools sort -o SRR5360684.sorted.bam SRR5360684.bam
+samtools index SRR5360684.sorted.bam
+samtools depth -o SRR5360684.depth.txt -H SRR5360684.sorted.bam
+python3 /pickett_flora/projects/read_simulation/code/scripts/get_samtools_avg_depth.py SRR5360684.depth.txt
+9.023378056269712
+cd ..
+
+mkdir simulated_F_prausnitzii
+cd simulated_F_prausnitzii
+cp ../../2_simulate_f_prausnitzii/output/GCF_003312465.1_ASM331246v1_genomic.fna_R\* ./
+bwa mem ../GCF_003312465.1_ASM331246v1_genomic.fna GCF_003312465.1_ASM331246v1_genomic.fna_R1.fastq GCF_003312465.1_ASM331246v1_genomic.fna_R2.fastq > simulated.sam
+samtools view -b simulated.sam > simulated.bam                                                                
+samtools sort -o simulated.sorted.bam simulated.bam                                                           
+samtools index simulated.sorted.bam 
+samtools depth -o simulated.depth.txt -H simulated.sorted.bam
+python3 /pickett_flora/projects/read_simulation/code/scripts/get_samtools_avg_depth.py simulated.depth.txt
+1.3841179998500637
+```
+
+## 2021.07.13
+---
+## **repeat simulation using error profile and n = 13 from SRR5298272 results and incomplete digest**
+
+
+Run readsynth.py (commit 4cf90a729ccd292c4c78bcfff27f3b546bcfcd50)
+
+```
+cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2_simulate_f_prausnitzii
+python3 /home/rkuster/readsynth/readsynth.py \
+  -genome GCF_003312465.1_ASM331246v1_genomic.fna \
+  -o ./output2/ \
+  -m1 CATG/ \
+  -m2 A/CGT \
+  -n 13 \
+  -l 76 \
+  -complete 0 \
+  -mean 550 \
+  -sd 50 \
+  -a1 /pickett_flora/projects/read_simulation/raw_data/adapters/liu_ddRADseq/liu_ddRADseq_adapters_R1.txt \
+  -a2 /pickett_flora/projects/read_simulation/raw_data/adapters/liu_ddRADseq/liu_ddRADseq_adapters_R2.txt \
+  -a1s 72 \
+  -a2s 71 \
+  -r1 ../1_profile_reads/SRR5298272/SRR5298272_R1.fastq \
+  -r2 ../1_profile_reads/SRR5298272/SRR5298272_R2.fastq \
+  -p 1 \
+  -q1 qscores.SRR5298272_R1.fastq.csv \
+  -q2 qscores.SRR5298272_R2.fastq.csv
+```
+
+```
+spack load bwa@0.7.17
+spack load samtools@1.10
+
+cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/3_compare_rms_to_sim_mapping/
+mkdir simulated_F_prausnitzii_2
+cd simulated_F_prausnitzii_2
+cp ../../2_simulate_f_prausnitzii/output2/GCF_003312465.1_ASM331246v1_genomic.fna_R\* ./
+bwa mem ../GCF_003312465.1_ASM331246v1_genomic.fna GCF_003312465.1_ASM331246v1_genomic.fna_R1.fastq GCF_003312465.1_ASM331246v1_genomic.fna_R2.fastq > simulated2.sam
+samtools view -b simulated2.sam > simulated2.bam                                                                
+samtools sort -o simulated2.sorted.bam simulated2.bam                                                           
+samtools index simulated2.sorted.bam 
+samtools depth -o simulated2.depth.txt -H simulated2.sorted.bam
+python3 /pickett_flora/projects/read_simulation/code/scripts/get_samtools_avg_depth.py simulated2.depth.txt
+3.6272405227291276
+```
+
+
+
+

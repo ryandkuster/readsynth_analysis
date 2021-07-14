@@ -5,6 +5,7 @@ __pycache__/*
 *fna
 *fna.gz
 *fastq
+*fq
 *fastq.gz
 code/kraken2
 output/
