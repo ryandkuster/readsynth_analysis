@@ -331,7 +331,12 @@ sed -n '1~8p;2~8p;3~8p;4~8p' SRR5360684.fastq > SRR5360684_R1.fastq
 sed -n '5~8p;6~8p;7~8p;8~8p' SRR5360684.fastq > SRR5360684_R2.fastq
 ```
 
-There.
+There. But wait, the header naming won't work with bwa mem:
+
+```
+for i in *R2.fastq ; do python3 ../../code/scripts/fix_R2_headers2.py $i && mv modified_${i} $i ; done
+```
+
 *<sub><sup>/pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/1_profile_reads</sub></sup>*
 
 Run Kraken as before:
@@ -485,7 +490,7 @@ spack load samtools@1.10
 cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/3_compare_rms_to_sim_mapping/
 mkdir simulated_F_prausnitzii_2
 cd simulated_F_prausnitzii_2
-cp ../../2_simulate_f_prausnitzii/output2/GCF_003312465.1_ASM331246v1_genomic.fna_R\* ./
+cp ../../2_simulate_f_prausnitzii/output2/GCF_003312465.1_ASM331246v1_genomic.fna_R* ./
 bwa mem ../GCF_003312465.1_ASM331246v1_genomic.fna GCF_003312465.1_ASM331246v1_genomic.fna_R1.fastq GCF_003312465.1_ASM331246v1_genomic.fna_R2.fastq > simulated2.sam
 samtools view -b simulated2.sam > simulated2.bam                                                                
 samtools sort -o simulated2.sorted.bam simulated2.bam                                                           
@@ -494,6 +499,65 @@ samtools depth -o simulated2.depth.txt -H simulated2.sorted.bam
 python3 /pickett_flora/projects/read_simulation/code/scripts/get_samtools_avg_depth.py simulated2.depth.txt
 3.6272405227291276
 ```
+
+## 2021.07.14
+---
+## **bwa map Liu datasets to reference without subsetting kraken F. prausnitzii hits**
+
+```
+spack load bwa@0.7.17
+spack load samtools@1.10
+
+cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/3_compare_rms_to_sim_mapping
+
+mkdir SRR5298272_non_profiled
+cd SRR5298272_non_profiled
+ln -fs /pickett_flora/projects/read_simulation/raw_data/liu_RMS/SRR5298272_R* ./
+bwa mem ../GCF_003312465.1_ASM331246v1_genomic.fna SRR5298272_R1.fastq SRR5298272_R2.fastq > SRR5298272_non_profiled.sam
+samtools view -b SRR5298272_non_profiled.sam > SRR5298272_non_profiled.bam
+samtools sort -o SRR5298272_non_profiled.sorted.bam SRR5298272_non_profiled.bam
+samtools index SRR5298272_non_profiled.sorted.bam
+
+mkdir SRR5298274_non_profiled
+cd SRR5298274_non_profiled
+ln -fs /pickett_flora/projects/read_simulation/raw_data/liu_RMS/SRR5298274_R* ./
+bwa mem ../GCF_003312465.1_ASM331246v1_genomic.fna SRR5298274_R1.fastq SRR5298274_R2.fastq > SRR5298274_non_profiled.sam
+samtools view -b SRR5298274_non_profiled.sam > SRR5298274_non_profiled.bam
+samtools sort -o SRR5298274_non_profiled.sorted.bam SRR5298274_non_profiled.bam
+samtools index SRR5298274_non_profiled.sorted.bam
+
+mkdir SRR5360684_non_profiled
+cd SRR5360684_non_profiled
+ln -fs /pickett_flora/projects/read_simulation/raw_data/liu_RMS/SRR5360684_R* ./
+bwa mem ../GCF_003312465.1_ASM331246v1_genomic.fna SRR5360684_R1.fastq SRR5360684_R2.fastq > SRR5360684_non_profiled.sam
+samtools view -b SRR5360684_non_profiled.sam > SRR5360684_non_profiled.bam
+samtools sort -o SRR5360684_non_profiled.sorted.bam SRR5360684_non_profiled.bam
+samtools index SRR5360684_non_profiled.sorted.bam
+```
+
+## 2021.07.15
+---
+## *compare correlation between simulated and actual RMS reads*
+
+```
+spack load samtools@1.10
+cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/3_compare_rms_to_sim_mapping
+samtools depth -o compare_all.depth.txt -H ./simulated_F_prausnitzii/simulated.sorted.bam ./simulated_F_prausnitzii_2/simulated2.sorted.bam ./SRR5298272/SRR5298272.sorted.bam ./SRR5298274/SRR5298274.sorted.bam ./SRR5360684/SRR5360684.sorted.bam
+```
+
+
+
+## **redo the 30 genomes profiling using a custom database**
+
+```
+for i in ../../1520_genomes_RAD_characteristics/2021_06_28_test_1520_genomes/genomes/*fna ; do /pickett_flora/projects/read_simulation/code/kraken2/kraken2-build --add-to-library $i --no-masking --db 1520_db/ ; done
+
+/pickett_flora/projects/read_simulation/code/kraken2/kraken2-build --download-taxonomy --db 1520_db/
+```
+
+
+
+
 
 
 
