@@ -337,7 +337,7 @@ There. But wait, the header naming won't work with bwa mem:
 for i in *R2.fastq ; do python3 ../../code/scripts/fix_R2_headers2.py $i && mv modified_${i} $i ; done
 ```
 
-*<sub><sup>/pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/1_profile_reads</sub></sup>*
+*<sub><sup>/pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/1_profile_reads</sub></sup>*
 
 Run Kraken as before:
 
@@ -356,7 +356,7 @@ python3 /pickett_flora/projects/read_simulation/code/scripts/pull_kraken_taxids.
 
 The three most prevalent taxa were 816 (Bacteroides), 853 (Faecalibacterium prausnitzii), and 74426 (Collinsella aerofaciens).
 
-*<sub><sup>/pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2_simulate_f_prausnitzii</sub></sup>*
+*<sub><sup>/pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/2_simulate_f_prausnitzii</sub></sup>*
 
 Download F. prausnitzii
 
@@ -367,7 +367,7 @@ wget "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/003/312/465/GCF_003312465.1_A
 Run readsynth.py (commit 4df8ce1f90394987637b4a83443ec53e808c1af2)
 
 ```
-cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2_simulate_f_prausnitzii
+cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/2_simulate_f_prausnitzii
 python3 /home/rkuster/readsynth/readsynth.py \
    -genome GCF_003312465.1_ASM331246v1_genomic.fna \
    -o ./output \
@@ -388,7 +388,7 @@ python3 /home/rkuster/readsynth/readsynth.py \
 ---
 ## **map reads from kraken assignments and reads from above simulation of F. prausnitzii to compare sites and depth**
 
-*<sub><sup>/pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/3_compare_rms_to_sim_mapping</sub></sup>*
+*<sub><sup>/pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping</sub></sup>*
 
 Grab the reads for each of the three Liu datasets that Kraken identified as F. prausnitzii.
 
@@ -461,7 +461,7 @@ python3 /pickett_flora/projects/read_simulation/code/scripts/get_samtools_avg_de
 Run readsynth.py (commit 4cf90a729ccd292c4c78bcfff27f3b546bcfcd50)
 
 ```
-cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2_simulate_f_prausnitzii
+cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/2_simulate_f_prausnitzii
 python3 /home/rkuster/readsynth/readsynth.py \
   -genome GCF_003312465.1_ASM331246v1_genomic.fna \
   -o ./output2/ \
@@ -487,7 +487,7 @@ python3 /home/rkuster/readsynth/readsynth.py \
 spack load bwa@0.7.17
 spack load samtools@1.10
 
-cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/3_compare_rms_to_sim_mapping/
+cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping/
 mkdir simulated_F_prausnitzii_2
 cd simulated_F_prausnitzii_2
 cp ../../2_simulate_f_prausnitzii/output2/GCF_003312465.1_ASM331246v1_genomic.fna_R* ./
@@ -508,7 +508,7 @@ python3 /pickett_flora/projects/read_simulation/code/scripts/get_samtools_avg_de
 spack load bwa@0.7.17
 spack load samtools@1.10
 
-cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/3_compare_rms_to_sim_mapping
+cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping
 
 mkdir SRR5298272_non_profiled
 cd SRR5298272_non_profiled
@@ -541,11 +541,54 @@ samtools index SRR5360684_non_profiled.sorted.bam
 
 ```
 spack load samtools@1.10
-cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/3_compare_rms_to_sim_mapping
+cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping
 samtools depth -o compare_all.depth.txt -H ./simulated_F_prausnitzii/simulated.sorted.bam ./simulated_F_prausnitzii_2/simulated2.sorted.bam ./SRR5298272/SRR5298272.sorted.bam ./SRR5298274/SRR5298274.sorted.bam ./SRR5360684/SRR5360684.sorted.bam
 ```
 
+used compare_sim_to_liu.R script in Rstudio to do a simple correlation of the simulated and Liu 2017 depths
 
+## 2021.07.16
+---
+## *test impact of altering genome copy number (-n)*
+
+Increasing the genome copy number seems to have a strong effect on the number of shorter reads drawn in the incomplete digest simulation. If the upper limit of fragment size (usually mean + 6sd) is very large (can be set manually with -f), then the shorter reads will be penalized more in the current weighting scheme. Even with the mean + 6sd condition, many smaller fragments will be rare unless the copy number is increased.
+
+The goal is to keep -f fixed and increase copy number (-n) by factors of 10 at 1, 10, 100.
+
+using readsynth.py (commit eba1aedcc24555c0201c8d5ce5ac0d9ac8a37fda)
+
+```
+cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_16_compare_copy_number
+cp -r ../2021_07_09_simulate_top_hit/2_simulate_f_prausnitzii/ ./1_simulate_f_prausnitzii
+rm -rf output*
+mkdir output_n_1
+mkdir output_n_10
+mkdir output_n_100
+```
+
+```
+spack load bwa@0.7.17
+spack load samtools@1.10
+
+cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_16_compare_copy_number
+mkdir 2_map_to_ref
+
+cp ../1_simulate_f_prausnitzii/GCF_003312465.1_ASM331246v1_genomic.fna ./
+bwa index GCF_003312465.1_ASM331246v1_genomic.fna
+
+mkdir simulation_n_1
+mkdir simulation_n_10
+mkdir simulation_n_100
+
+cd simulation_n_1
+bwa mem ../GCF_003312465.1_ASM331246v1_genomic.fna ../../1_simulate_f_prausnitzii/output_n_1/GCF_003312465.1_ASM331246v1_genomic.fna_R1.fastq ../../1_simulate_f_prausnitzii/output_n_1/GCF_003312465.1_ASM331246v1_genomic.fna_R2.fastq > simulation_n_1.sam
+samtools view -b SRR5298272.sam > SRR5298272.bam
+samtools sort -o SRR5298272.sorted.bam SRR5298272.bam
+samtools index SRR5298272.sorted.bam
+
+```
+
+# TODO:
 
 ## **redo the 30 genomes profiling using a custom database**
 
