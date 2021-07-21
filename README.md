@@ -677,7 +677,39 @@ bwa mem ../GCF_003312465.1_ASM331246v1_genomic.fna ../../1_simulate_f_prausnitzi
 samtools view -b -f 0x2 simulation_n_13.sam > simulation_n_13.bam
 samtools sort -o simulation_n_13.sorted.bam simulation_n_13.bam
 samtools index simulation_n_13.sorted.bam
+
+cd ..
+samtools depth -o compare_all.depth.txt -H ./simulation_n_13/simulation_n_13.sorted.bam \
+  ../../2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping/SRR5298272_non_profiled/SRR5298272_non_profiled.sorted.bam \
+  ../../2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping/SRR5298274_non_profiled/SRR5298274_non_profiled.sorted.bam \
+  ../../2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping/SRR5360684_non_profiled/SRR5360684_non_profiled.sorted.bam \
+  ../../2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping/simulated_F_prausnitzii/simulated.sorted.bam \
+  ../../2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping/simulated_F_prausnitzii_2/simulated2.sorted.bam
+
+echo "CHROM  POS 90_n13_sim SRR5298272_non_profiled SRR5298274_non_profiled SRR5360684_non_profiled old_sim1 old_sim2" > compare_depths.txt
+sed -n '2,$p' compare_all.depth.txt >> compare_depths.txt
 ```
+
+These results only show on nominal improvement vs. the first simulation (complete digest) of R = .35 vs R = .33. It is possible that copy number is affecting these outcomes. Assessing the SRR5298274_non_profiled results:
+
+```
+samtools depth -o SRR5298272_non_profiled.depth.txt -H SRR5298272_non_profiled.sorted.bam
+cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping/SRR5298272_non_profiled
+python3 /pickett_flora/projects/read_simulation/code/scripts/get_samtools_avg_depth.py SRR5298272_non_profiled.depth.txt 
+16.194673036059225
+```
+
+The most recent simulation used n=13 based on an earlier depth reading for the profiled (possibly incorrectly paired) SRR5298272 results. To confirm that average depth actually relates to the input n=13 of readsynth.py, assess read depth results of the simulated reads.
+
+```
+spack load samtools@1.10
+cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_20_updated_copy_number/2_map_to_ref/simulation_n_13
+samtools depth -o simulation_n_13.depth.txt -H simulation_n_13.sorted.bam
+python3 /pickett_flora/projects/read_simulation/code/scripts/get_samtools_avg_depth.py simulation_n_13.depth.txt 
+7.644556639965016
+```
+
+Takeaway: average depth doesn't seem to relate to the copy number input into readsynth.py.
 
 install ddRAGE version 1.7.1
 
