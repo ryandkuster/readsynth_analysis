@@ -403,7 +403,7 @@ To BWA map the reads without error due to fastq naming discrepency, rename the R
 python3 /pickett_flora/projects/read_simulation/code/scripts/fix_R2_headers.py taxid_853_cseqs_2.fq
 ```
 
-BWA map reads from RMS project and reads simulated from readsynth.py to the F. prausnitzii genome.
+BWA map reads from RMS project and reads simulated from readsynth.py to the F. prausnitzii genome. The reads are then subsetted to only those that have proper pairing.
 
 ```
 spack load bwa@0.7.17
@@ -413,30 +413,33 @@ bwa index GCF_003312465.1_ASM331246v1_genomic.fna
 
 cd SRR5298272
 bwa mem ../GCF_003312465.1_ASM331246v1_genomic.fna taxid_853_cseqs_1.fq modified_taxid_853_cseqs_2.fq > SRR5298272.sam
-samtools view -b SRR5298272.sam > SRR5298272.bam
+samtools view -b -f 0x2 SRR5298272.sam > SRR5298272.bam
 samtools sort -o SRR5298272.sorted.bam SRR5298272.bam
 samtools index SRR5298272.sorted.bam
 samtools depth -o SRR5298272.depth.txt -H SRR5298272.sorted.bam
+samtools stats SRR5298272.sorted.bam > SRR5298272_stats.txt
 python3 /pickett_flora/projects/read_simulation/code/scripts/get_samtools_avg_depth.py SRR5298272.depth.txt
 12.762109703977144
 cd ..
 
 cd SRR5298274
 bwa mem ../GCF_003312465.1_ASM331246v1_genomic.fna taxid_853_cseqs_1.fq modified_taxid_853_cseqs_2.fq > SRR5298274.sam
-samtools view -b SRR5298274.sam > SRR5298274.bam
+samtools view -b -f 0x2 SRR5298274.sam > SRR5298274.bam
 samtools sort -o SRR5298274.sorted.bam SRR5298274.bam
 samtools index SRR5298274.sorted.bam
 samtools depth -o SRR5298274.depth.txt -H SRR5298274.sorted.bam
+samtools stats SRR5298274.sorted.bam > SRR5298274_stats.txt
 python3 /pickett_flora/projects/read_simulation/code/scripts/get_samtools_avg_depth.py SRR5298274.depth.txt
 4.958139806567638
 cd ..
 
 cd SRR5360684
 bwa mem ../GCF_003312465.1_ASM331246v1_genomic.fna taxid_853_cseqs_1.fq modified_taxid_853_cseqs_2.fq > SRR5360684.sam
-samtools view -b SRR5360684.sam > SRR5360684.bam
+samtools view -b -f 0x2 SRR5360684.sam > SRR5360684.bam
 samtools sort -o SRR5360684.sorted.bam SRR5360684.bam
 samtools index SRR5360684.sorted.bam
 samtools depth -o SRR5360684.depth.txt -H SRR5360684.sorted.bam
+samtools stats SRR5360684.sorted.bam > SRR5360684_stats.txt
 python3 /pickett_flora/projects/read_simulation/code/scripts/get_samtools_avg_depth.py SRR5360684.depth.txt
 9.023378056269712
 cd ..
@@ -445,13 +448,24 @@ mkdir simulated_F_prausnitzii
 cd simulated_F_prausnitzii
 cp ../../2_simulate_f_prausnitzii/output/GCF_003312465.1_ASM331246v1_genomic.fna_R\* ./
 bwa mem ../GCF_003312465.1_ASM331246v1_genomic.fna GCF_003312465.1_ASM331246v1_genomic.fna_R1.fastq GCF_003312465.1_ASM331246v1_genomic.fna_R2.fastq > simulated.sam
-samtools view -b simulated.sam > simulated.bam                                                                
+samtools view -b -f 0x2 simulated.sam > simulated.bam                                                                
 samtools sort -o simulated.sorted.bam simulated.bam                                                           
 samtools index simulated.sorted.bam 
 samtools depth -o simulated.depth.txt -H simulated.sorted.bam
 python3 /pickett_flora/projects/read_simulation/code/scripts/get_samtools_avg_depth.py simulated.depth.txt
 1.3841179998500637
 ```
+
+||SRR5298272|SRR5298274|SRR5298274|simulated|
+|:-|:-|:-|:-|:-|
+|reads|184856|31108|86706|1958|
+|insert (bp)|317.0|321.5|299.1|383.9|
+|insert sd (bp)|119.0|115.2|125.9|73.0|
+
+The weighted average insert for the SRA data is 312.3346833.
+
+The weighted average insert sd for the SRA data is 120.5860872.
+
 
 ## 2021.07.13
 ---
@@ -492,7 +506,7 @@ mkdir simulated_F_prausnitzii_2
 cd simulated_F_prausnitzii_2
 cp ../../2_simulate_f_prausnitzii/output2/GCF_003312465.1_ASM331246v1_genomic.fna_R* ./
 bwa mem ../GCF_003312465.1_ASM331246v1_genomic.fna GCF_003312465.1_ASM331246v1_genomic.fna_R1.fastq GCF_003312465.1_ASM331246v1_genomic.fna_R2.fastq > simulated2.sam
-samtools view -b simulated2.sam > simulated2.bam                                                                
+samtools view -b -f 0x2 simulated2.sam > simulated2.bam                                                                
 samtools sort -o simulated2.sorted.bam simulated2.bam                                                           
 samtools index simulated2.sorted.bam 
 samtools depth -o simulated2.depth.txt -H simulated2.sorted.bam
@@ -514,25 +528,28 @@ mkdir SRR5298272_non_profiled
 cd SRR5298272_non_profiled
 ln -fs /pickett_flora/projects/read_simulation/raw_data/liu_RMS/SRR5298272_R* ./
 bwa mem ../GCF_003312465.1_ASM331246v1_genomic.fna SRR5298272_R1.fastq SRR5298272_R2.fastq > SRR5298272_non_profiled.sam
-samtools view -b SRR5298272_non_profiled.sam > SRR5298272_non_profiled.bam
+samtools view -b -f 0x2 SRR5298272_non_profiled.sam > SRR5298272_non_profiled.bam
 samtools sort -o SRR5298272_non_profiled.sorted.bam SRR5298272_non_profiled.bam
 samtools index SRR5298272_non_profiled.sorted.bam
+samtools stats SRR5298272_non_profiled.sorted.bam > SRR5298272_non_profiled_stats.txt
 
 mkdir SRR5298274_non_profiled
 cd SRR5298274_non_profiled
 ln -fs /pickett_flora/projects/read_simulation/raw_data/liu_RMS/SRR5298274_R* ./
 bwa mem ../GCF_003312465.1_ASM331246v1_genomic.fna SRR5298274_R1.fastq SRR5298274_R2.fastq > SRR5298274_non_profiled.sam
-samtools view -b SRR5298274_non_profiled.sam > SRR5298274_non_profiled.bam
+samtools view -b -f 0x2 SRR5298274_non_profiled.sam > SRR5298274_non_profiled.bam
 samtools sort -o SRR5298274_non_profiled.sorted.bam SRR5298274_non_profiled.bam
 samtools index SRR5298274_non_profiled.sorted.bam
+samtools stats SRR5298274_non_profiled.sorted.bam > SRR5298274_non_profiled_stats.txt
 
 mkdir SRR5360684_non_profiled
 cd SRR5360684_non_profiled
 ln -fs /pickett_flora/projects/read_simulation/raw_data/liu_RMS/SRR5360684_R* ./
 bwa mem ../GCF_003312465.1_ASM331246v1_genomic.fna SRR5360684_R1.fastq SRR5360684_R2.fastq > SRR5360684_non_profiled.sam
-samtools view -b SRR5360684_non_profiled.sam > SRR5360684_non_profiled.bam
+samtools view -b -f 0x2 SRR5360684_non_profiled.sam > SRR5360684_non_profiled.bam
 samtools sort -o SRR5360684_non_profiled.sorted.bam SRR5360684_non_profiled.bam
 samtools index SRR5360684_non_profiled.sorted.bam
+samtools stats SRR5360684_non_profiled.sorted.bam > SRR5360684_non_profiled_stats.txt
 ```
 
 ## 2021.07.15
@@ -555,6 +572,8 @@ Increasing the genome copy number seems to have a strong effect on the number of
 
 The goal is to keep -f fixed and increase copy number (-n) by factors of 10 at 1, 10, 100.
 
+Also, the mean and sd will be altered to simulate the Liu 2017 F. prausnitzii dataset (mean: 143 adapter length + 312 = 455; sd: 121)
+
 using readsynth.py (commit eba1aedcc24555c0201c8d5ce5ac0d9ac8a37fda)
 
 ```
@@ -565,6 +584,8 @@ mkdir output_n_1
 mkdir output_n_10
 mkdir output_n_100
 ```
+
+BWA align the reads to the F. prausnitzii reference.
 
 ```
 spack load bwa@0.7.17
@@ -582,10 +603,87 @@ mkdir simulation_n_100
 
 cd simulation_n_1
 bwa mem ../GCF_003312465.1_ASM331246v1_genomic.fna ../../1_simulate_f_prausnitzii/output_n_1/GCF_003312465.1_ASM331246v1_genomic.fna_R1.fastq ../../1_simulate_f_prausnitzii/output_n_1/GCF_003312465.1_ASM331246v1_genomic.fna_R2.fastq > simulation_n_1.sam
-samtools view -b SRR5298272.sam > SRR5298272.bam
-samtools sort -o SRR5298272.sorted.bam SRR5298272.bam
-samtools index SRR5298272.sorted.bam
+samtools view -b -f 0x2 simulation_n_1.sam > simulation_n_1.bam
+samtools sort -o simulation_n_1.sorted.bam simulation_n_1.bam
+samtools index simulation_n_1.sorted.bam
 
+cd ../simulation_n_10
+bwa mem ../GCF_003312465.1_ASM331246v1_genomic.fna ../../1_simulate_f_prausnitzii/output_n_10/GCF_003312465.1_ASM331246v1_genomic.fna_R1.fastq ../../1_simulate_f_prausnitzii/output_n_10/GCF_003312465.1_ASM331246v1_genomic.fna_R2.fastq > simulation_n_10.sam
+samtools view -b -f 0x2 simulation_n_10.sam > simulation_n_10.bam
+samtools sort -o simulation_n_10.sorted.bam simulation_n_10.bam
+samtools index simulation_n_10.sorted.bam
+
+cd ../simulation_n_100
+bwa mem ../GCF_003312465.1_ASM331246v1_genomic.fna ../../1_simulate_f_prausnitzii/output_n_100/GCF_003312465.1_ASM331246v1_genomic.fna_R1.fastq ../../1_simulate_f_prausnitzii/output_n_100/GCF_003312465.1_ASM331246v1_genomic.fna_R2.fastq > simulation_n_100.sam
+samtools view -b -f 0x2 simulation_n_100.sam > simulation_n_100.bam
+samtools sort -o simulation_n_100.sorted.bam simulation_n_100.bam
+samtools index simulation_n_100.sorted.bam
+```
+
+Alignments viewed with IGV. Many trends carry over between the three levels of representation. The reads don't appear to follow the empirical data from Liu 2017.
+
+## 2021.07.20
+---
+## *test new copy number simulation variation*
+
+Using the updated readsynth partial_digest script, re-digest the F. prausnitzii genome using the same restriction enzymes as before from the Liu 2017 study (NlaIII and HpyCH4IV) as well as the approximate read length, standard deviation, and copy number (13, based on depth)
+
+Sample distributions using F. prausnitzii:
+
+![10 X copy number with .2 digest efficiency](https://github.com/ryandkuster/read_simulation/blob/main/misc/visuals/20_n10_sampled_GCF_000005845.2_ASM584v2_genomic.fna.png)
+
+![10 X copy number with .4 digest efficiency](https://github.com/ryandkuster/read_simulation/blob/main/misc/visuals/40_n10_sampled_GCF_000005845.2_ASM584v2_genomic.fna.png)
+
+![10 X copy number with .6 digest efficiency](https://github.com/ryandkuster/read_simulation/blob/main/misc/visuals/60_n10_sampled_GCF_000005845.2_ASM584v2_genomic.fna.png)
+
+![10 X copy number with .8 digest efficiency](https://github.com/ryandkuster/read_simulation/blob/main/misc/visuals/80_n10_sampled_GCF_000005845.2_ASM584v2_genomic.fna.png)
+
+![10 X copy number with 1 digest efficiency](https://github.com/ryandkuster/read_simulation/blob/main/misc/visuals/100_n10_sampled_GCF_000005845.2_ASM584v2_genomic.fna.png)
+
+Note how the size-selected reads (green) represent a normal distribution that intersects with the fragments in the defined size range. This is similar to the size selection reported in Peterson et al. 2012.
+
+![Peterson et al. 2012 size distribution](https://github.com/ryandkuster/read_simulation/blob/main/misc/visuals/peterson_2012.png)
+
+This also follows the Sage Science BluePippin size distribution:
+
+![Sage Science size distribution](https://github.com/ryandkuster/read_simulation/blob/main/misc/visuals/sage_bluepippin_2016.png)
+
+readsynth.py commit 6d7984ab9086541cbdd4bd62bba6e1aaf22a4c6a
+
+```
+python3 /home/rkuster/readsynth/readsynth.py \
+  -genome GCF_003312465.1_ASM331246v1_genomic.fna \
+  -o ./output/ \
+  -m1 CATG/ \
+  -m2 A/CGT \
+  -n 13 \
+  -l 76 \
+  -complete 0.9 \
+  -mean 455 \
+  -sd 121 \
+  -a1 /pickett_flora/projects/read_simulation/raw_data/adapters/liu_ddRADseq/liu_ddRADseq_adapters_R1.txt \
+  -a2 /pickett_flora/projects/read_simulation/raw_data/adapters/liu_ddRADseq/liu_ddRADseq_adapters_R2.txt \
+  -a1s 72 \
+  -a2s 71 \
+  -t 1 \ 
+```
+map
+
+```
+spack load bwa@0.7.17
+spack load samtools@1.10
+cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_20_updated_copy_number/2_map_to_ref/simulation_n_13
+bwa mem ../GCF_003312465.1_ASM331246v1_genomic.fna ../../1_simulate_f_prausnitzii/output/GCF_003312465.1_ASM331246v1_genomic.fna_R1.fastq ../../1_simulate_f_prausnitzii/output/GCF_003312465.1_ASM331246v1_genomic.fna_R2.fastq > simulation_n_13.sam
+samtools view -b -f 0x2 simulation_n_13.sam > simulation_n_13.bam
+samtools sort -o simulation_n_13.sorted.bam simulation_n_13.bam
+samtools index simulation_n_13.sorted.bam
+```
+
+install ddRAGE version 1.7.1
+
+```
+conda create -n ddrage -c bioconda ddrage
+source activate ddrage
 ```
 
 # TODO:
