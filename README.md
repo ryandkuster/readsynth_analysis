@@ -718,20 +718,265 @@ conda create -n ddrage -c bioconda ddrage
 source activate ddrage
 ```
 
-# TODO:
+## 2021.07.23
+---
+## comparing F. prausnitzii alignments using Jaccard distance
 
-## **redo the 30 genomes profiling using a custom database**
+Pull only the sequences from the alignments for comparison:
 
 ```
-for i in ../../1520_genomes_RAD_characteristics/2021_06_28_test_1520_genomes/genomes/*fna ; do /pickett_flora/projects/read_simulation/code/kraken2/kraken2-build --add-to-library $i --no-masking --db 1520_db/ ; done
+cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping/SRR5298272_non_profiled
+samtools view SRR5298272_non_profiled.sorted.bam | awk '{ print $10 }' > SRR5298272_non_profiled_sequences.txt
 
-/pickett_flora/projects/read_simulation/code/kraken2/kraken2-build --download-taxonomy --db 1520_db/
+cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_20_updated_copy_number/2_map_to_ref/simulation_n_13
+samtools view simulation_n_13.sorted.bam | awk '{ print $10 }' > simulation_n_13_sequences.txt
+```
+
+Run custom python script 'jaccard_distance.py' using k-mer size 5 to compare recent simulations with a previous file mapped using bwa (not Kraken) to the F. prausnitzii reference:
+
+```
+python3 ../../../../../code/scripts/jaccard_distance.py simulation_n_13_sequences.txt ../../../2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping/SRR5298274_non_profiled/SRR5298274_non_profiled_sequences.txt 5
+```
+*getting kmers for first file  
+getting kmers for second file  
+simulation_n_13_sequences.txt vs SRR5298274_non_profiled_sequences.txt 0.4176675419966591*
+
+```
+python3 ../../../../../code/scripts/jaccard_distance.py ../../../2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping/SRR5298272_non_profiled/SRR5298272_non_profiled_sequences.txt ../../../2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping/SRR5298274_non_profiled/SRR5298274_non_profiled_sequences.txt 5
+```
+
+*getting kmers for first file  
+getting kmers for second file  
+SRR5298272_non_profiled_sequences.txt vs SRR5298274_non_profiled_sequences.txt 0.1776127556747974*
+
+```
+python3 ../../../../../code/scripts/jaccard_distance.py ../../../2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping/SRR5298272_non_profiled/SRR5298272_non_profiled_sequences.txt ../../../2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping/SRR5360684_non_profiled/SRR5360684_non_profiled_sequences.txt 5
+```
+
+*getting kmers for first file  
+getting kmers for second file  
+SRR5298272_non_profiled_sequences.txt vs SRR5360684_non_profiled_sequences.txt 0.3746411604853273*
+
+Repeat using k=20:
+
+```
+python3 ../../../../../code/scripts/jaccard_distance.py simulation_n_13_sequences.txt ../../../2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping/SRR5298274_non_profiled/SRR5298274_non_profiled_sequences.txt 20
+```
+
+*getting kmers for first file  
+getting kmers for second file  
+simulation_n_13_sequences.txt vs SRR5298274_non_profiled_sequences.txt 0.05765676657390458*
+
+```
+python3 ../../../../../code/scripts/jaccard_distance.py ../../../2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping/SRR5298272_non_profiled/SRR5298272_non_profiled_sequences.txt ../../../2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping/SRR5298274_non_profiled/SRR5298274_non_profiled_sequences.txt 20
+```
+
+*getting kmers for first file  
+getting kmers for second file  
+SRR5298272_non_profiled_sequences.txt vs SRR5298274_non_profiled_sequences.txt 0.0791834345843937*
+
+Jaccard distance (modified to count repeated k-mers) shows a higher similarity to
+
+## 2021.07.26
+---
+## use Snipen BEI mock sequencing data to compare effects of RE choice and digest efficiency
+
+using Kraken2 from commit 84b2874e0ba5ffc9abaebe630433a430cd0f69f4
+using Bracken from commit b014034d5c0efa7c4cb3eb9c1f0913c09cdce728
+
+```
+wget https://sra-pub-run-odp.s3.amazonaws.com/sra/SRR10199716/SRR10199716
+wget https://sra-pub-run-odp.s3.amazonaws.com/sra/SRR10199724/SRR10199724
+wget https://sra-pub-run-odp.s3.amazonaws.com/sra/SRR10199725/SRR10199725
+spack load sratoolkit@2.10.7
+
+for i in SRR*; do fastq-dump --split-files $i ; done
+```
+
+Use ngscomposer scallop.py (commit 96f847fea7c89f74cc42f52004d43c2b0c5ac88a) trim adapters from reads to leave only genomic RE motif and beyond (EcoRI lost 'G' in ligation process)
+
+```
+cd /pickett_flora/projects/read_simulation/analyses/snipen_2021_RMS/2021_07_26_test_mock_data/1_front_trim_snipen_seqs
+ln -fs /pickett_flora/projects/read_simulation/raw_data/snipen_RMS/SRR101997*fastq ./
+for i in *1.fastq ; do python3 /home/rkuster/ngscomposer/tools/scallop.py -r1 $i -f 11 ; done
+for i in *2.fastq ; do python3 /home/rkuster/ngscomposer/tools/scallop.py -r1 $i -f 13 ; done
+```
+Create a custom kraken2/Bracken database for the 20 genomes in the Bei dataset:
+
+```
+cd /pickett_flora/projects/read_simulation/raw_data/snipen_RMS/mock_community_ref_genomes
+for i in *fna ; do ../../../code/kraken2/kraken2-build --add-to-library $i --db ../bei_20_genomes_db/ ; done
+../../../code/kraken2/kraken2-build --download-taxonomy --db ../bei_20_genomes_db/
+../../../code/kraken2/kraken2-build --build --db ../bei_20_genomes_db/
+../../../code/Bracken/bracken-build -d ../bei_20_genomes_db/ -t 1 -x ../../../code/kraken2/
+```
+
+run kraken taxonomic profiling on reads:
+
+```
+cd /pickett_flora/projects/read_simulation/analyses/snipen_2021_RMS/2021_07_26_test_mock_data/2_kraken_snipen_seqs
+
+mkdir SRR10199716
+mkdir SRR10199724
+mkdir SRR10199725
+
+cd SRR10199716
+/pickett_flora/projects/read_simulation/code/kraken2/kraken2 --paired --threads 2 --report 2021_07_28.kreport --classified-out cseqs#.fq --unclassified-out useqs#.fq --db /pickett_flora/projects/read_simulation/raw_data/snipen_RMS/bei_20_genomes_db/ ../../1_front_trim_snipen_seqs/trimmed_se.SRR10199716_1.fastq ../../1_front_trim_snipen_seqs/trimmed_se.SRR10199716_2.fastq > 2021_07_28_run.txt
+```
+
+*658194 sequences (179.03 Mbp) processed in 5.211s (7578.1 Kseq/m, 2061.26 Mbp/m).  
+  620655 sequences classified (94.30%)  
+  37539 sequences unclassified (5.70%)*
+
+```
+cd ../SRR10199724
+/pickett_flora/projects/read_simulation/code/kraken2/kraken2 --paired --threads 2 --report 2021_07_28.kreport --classified-out cseqs#.fq --unclassified-out useqs#.fq --db /pickett_flora/projects/read_simulation/raw_data/snipen_RMS/bei_20_genomes_db/ ../../1_front_trim_snipen_seqs/trimmed_se.SRR10199724_1.fastq ../../1_front_trim_snipen_seqs/trimmed_se.SRR10199724_2.fastq > 2021_07_28_run.txt
+```
+
+*1607175 sequences (437.15 Mbp) processed in 13.629s (7075.6 Kseq/m, 1924.55 Mbp/m).  
+  1538745 sequences classified (95.74%)  
+  68430 sequences unclassified (4.26%)*
+
+```
+cd ../SRR10199725
+/pickett_flora/projects/read_simulation/code/kraken2/kraken2 --paired --threads 2 --report 2021_07_28.kreport --classified-out cseqs#.fq --unclassified-out useqs#.fq --db /pickett_flora/projects/read_simulation/raw_data/snipen_RMS/bei_20_genomes_db/ ../../1_front_trim_snipen_seqs/trimmed_se.SRR10199725_1.fastq ../../1_front_trim_snipen_seqs/trimmed_se.SRR10199725_2.fastq > 2021_07_28_run.txt
+```
+
+*789892 sequences (214.85 Mbp) processed in 7.217s (6567.2 Kseq/m, 1786.27 Mbp/m).  
+  758411 sequences classified (96.01%)  
+  31481 sequences unclassified (3.99%)* 
+
+```
+/pickett_flora/projects/read_simulation/code/Bracken/bracken -d /pickett_flora/projects/read_simulation/raw_data/standard_db/ -i 2021_07_28.kreport -o 2021_07_28.bracken -r 75 -l S -t 10
+```
+
+For each of the 20 genomes, the 16S copy number was referenced at https://rrndb.umms.med.umich.edu as in Snipen et al. 2021.
+
+```
+6    GCA_013372085.1_ASM1337208v1_genomic.fna.gz
+3    GCA_000154225.1_ASM15422v1_genomic.fna.gz
+12    GCA_000008005.1_ASM800v1_genomic.fna.gz
+7    GCA_000012825.1_ASM1282v1_genomic.fna.gz
+14    GCA_000016965.1_ASM1696v1_genomic.fna.gz
+3    GCA_000008565.1_ASM856v1_genomic.fna.gz
+4    GCA_000172575.2_ASM17257v2_genomic.fna.gz
+7    GCA_000005845.2_ASM584v2_genomic.fna.gz
+2    GCA_000008525.1_ASM852v1_genomic.fna.gz
+6    GCA_000014425.1_ASM1442v1_genomic.fna.gz
+6    GCA_000196035.1_ASM19603v1_genomic.fna.gz
+4    GCA_000008805.1_ASM880v1_genomic.fna.gz
+3    GCA_000008345.1_ASM834v1_genomic.fna.gz
+4    GCA_000006765.1_ASM676v1_genomic.fna.gz
+3    GCA_000012905.2_ASM1290v2_genomic.fna.gz
+5    GCA_000017085.1_ASM1708v1_genomic.fna.gz
+5    GCA_000007645.1_ASM764v1_genomic.fna.gz
+7    GCA_000007265.1_ASM726v1_genomic.fna.gz
+5    GCA_000007465.2_ASM746v2_genomic.fna.gz
+4    GCA_000006885.1_ASM688v1_genomic.fna.gz
 ```
 
 
+file opened in pandas and manipulated as follows to match the format of the 1520 genomes EDA approach:
+
+Python REPL:
+```
+import pandas as pd
+
+df = pd.read_csv('bei_16S_copy_numbers.txt',sep='\s+',header=None)
+copy_no = round(100/df.iloc[:,0])
+copy_no = [int(i) for i in copy_no]
+df['copy_no'] = copy_no
+df = df.drop(columns=0)
+df.to_csv('sampled_files_key.txt',sep='\t',header=None,index=None)
+```
 
 
+```
+spack load bwa@0.7.17
+spack load samtools@1.10
+
+cd /pickett_flora/projects/read_simulation/raw_data/snipen_RMS/mock_community_ref_genomes/
+for i in *fna ; do bwa index $i ; done
+
+cd /pickett_flora/projects/read_simulation/analyses/snipen_2021_RMS/2021_07_26_test_mock_data/3_bwa_map_snipen_seqs
+
+for query in ../2_kraken_snipen_seqs/SRR101997* ; do
+  echo ${query#"../2_kraken_snipen_seqs/"}
+  mkdir ${query#"../2_kraken_snipen_seqs/"}
+  cd ${query#"../2_kraken_snipen_seqs/"}
+  for genome in /pickett_flora/projects/read_simulation/raw_data/snipen_RMS/mock_community_ref_genomes/*fna ; do
+    genome_name=$(basename $genome)
+    genome_name=${genome_name%%.fna}
+    mkdir $genome_name
+    cd $genome_name
+    bwa mem $genome ../../../1_front_trim_snipen_seqs/trimmed_se.${query#"../2_kraken_snipen_seqs/"}_1.fastq \
+    ../../../1_front_trim_snipen_seqs/trimmed_se.${query#"../2_kraken_snipen_seqs/"}_2.fastq > ${genome_name}.sam
+    samtools view -b -f 0x2 ${genome_name}.sam > ${genome_name}.bam
+    samtools sort -o ${genome_name}.sorted.bam ${genome_name}.bam
+    samtools index ${genome_name}.sorted.bam
+    samtools stats ${genome_name}.sorted.bam > ${genome_name}_stats.txt
+    cd ..
+  done
+  cd ..
+done
+```
+
+import pandas as pd
+df = pd.read_csv('insert_size_average.txt',header=None,sep='\s+')
+df[4].mean()
+
+df = pd.read_csv('insert_size_sds.txt',header=None,sep='\s+')
+df[5].mean()
 
 
+```
+cd SRR10199716/
+for i in ./GCA* ; do cat ${i}/*stats.txt | grep "insert size average" >> insert_size_average.txt ; done
+for i in ./GCA* ; do cat ${i}/*stats.txt | grep "insert size standard deviation" >> insert_size_sds.txt ; done
+```
 
+insert size average: 145.53499999999997  
+insert size sd: 94.32499999999999
 
+```
+cd ../SRR10199724/
+for i in ./GCA* ; do cat ${i}/*stats.txt | grep "insert size average" >> insert_size_average.txt ; done
+for i in ./GCA* ; do cat ${i}/*stats.txt | grep "insert size standard deviation" >> insert_size_sds.txt ; done
+```
+
+insert size average: 145.07999999999998
+insert size sd: 93.88500000000002
+
+```
+for i in ./GCA* ; do cat ${i}/*stats.txt | grep "insert size average" >> insert_size_average.txt ; done
+for i in ./GCA* ; do cat ${i}/*stats.txt | grep "insert size standard deviation" >> insert_size_sds.txt ; done
+```
+
+insert size average: 143.64000000000004
+insert size sd: 94.82999999999998
+
+The average insert size across the three Snipen replicates was 145bp with 94bp standard deviation, so these values will be used for simulation.
+I'll add 11bp (156bp total) for the adapter lengths that extend beyond the SBS start site as these were ligated before size selection and size selection occurred before adding the p5 and p7 indices. 148bp was used as the read length as the empirical data has R1 145bp and R2 151bp lengths.
+
+Run bash script 'run_95_percent_digest_sim.sh' feeding in 'sampled_files_key.txt' as stdin1:
+
+```
+while read genome copies; do
+  echo $genome $copies
+  python3 /home/rkuster/readsynth/readsynth.py \
+     -genome $genome \
+     -m1 G/AATTC \
+     -m2 T/TAA \
+     -complete 0.95 \
+     -o ./95_percent/ \
+     -n $copies \
+     -mean 156 \
+     -sd 94 \
+     -l 148 \
+     -t 4 \
+     -a1 /pickett_flora/projects/read_simulation/raw_data/adapters/snipen_ddRADseq/snipen_ddRADseq_adapters_R1.txt \
+     -a2 /pickett_flora/projects/read_simulation/raw_data/adapters/snipen_ddRADseq/snipen_ddRADseq_adapters_R2.txt \
+     -a1s 7 \
+     -a2s 4 ;
+done < $1
+```
