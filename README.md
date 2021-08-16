@@ -846,8 +846,10 @@ cd ../SRR10199725
   758411 sequences classified (96.01%)  
   31481 sequences unclassified (3.99%)* 
 
+for each kraken output, run:
+
 ```
-/pickett_flora/projects/read_simulation/code/Bracken/bracken -d /pickett_flora/projects/read_simulation/raw_data/standard_db/ -i 2021_07_28.kreport -o 2021_07_28.bracken -r 75 -l S -t 10
+/pickett_flora/projects/read_simulation/code/Bracken/bracken -d /pickett_flora/projects/read_simulation/raw_data/snipen_RMS/bei_20_genomes_db/ -i 2021_07_28.kreport -o 2021_07_28.bracken -r 75 -l S -t 10
 ```
 
 For each of the 20 genomes, the 16S copy number was referenced at https://rrndb.umms.med.umich.edu as in Snipen et al. 2021.
@@ -980,3 +982,99 @@ while read genome copies; do
      -a2s 4 ;
 done < $1
 ```
+
+run kraken taxonomic profiling on reads:
+
+```
+cd /pickett_flora/projects/read_simulation/analyses/snipen_2021_RMS/2021_07_26_test_mock_data/5_kraken_simulated_seqs
+
+mkdir 50_percent
+mkdir 75_percent
+mkdir 95_percent
+
+cd 50_percent
+/pickett_flora/projects/read_simulation/code/kraken2/kraken2 --paired --threads 2 --report 2021_07_29.kreport --classified-out cseqs#.fq --unclassified-out useqs#.fq --db /pickett_flora/projects/read_simulation/raw_data/snipen_RMS/bei_20_genomes_db/ ../../4_simulate_bei_20_genomes/50_percent/50_percent_R1.fastq ../../4_simulate_bei_20_genomes/50_percent/50_percent_R2.fastq > 2021_07_29_run.txt
+
+/pickett_flora/projects/read_simulation/code/Bracken/bracken -d /pickett_flora/projects/read_simulation/raw_data/snipen_RMS/bei_20_genomes_db/ -i 2021_07_29.kreport -o 2021_07_29.bracken -l S -t 10
+
+cd ../75_percent/
+/pickett_flora/projects/read_simulation/code/kraken2/kraken2 --paired --threads 2 --report 2021_07_29.kreport --classified-out cseqs#.fq --unclassified-out useqs#.fq --db /pickett_flora/projects/read_simulation/raw_data/snipen_RMS/bei_20_genomes_db/ ../../4_simulate_bei_20_genomes/75_percent/75_percent_R1.fastq ../../4_simulate_bei_20_genomes/75_percent/75_percent_R2.fastq > 2021_07_29_run.txt
+
+/pickett_flora/projects/read_simulation/code/Bracken/bracken -d /pickett_flora/projects/read_simulation/raw_data/snipen_RMS/bei_20_genomes_db/ -i 2021_07_29.kreport -o 2021_07_29.bracken -l S -t 10
+
+cd ../95_percent/
+/pickett_flora/projects/read_simulation/code/kraken2/kraken2 --paired --threads 2 --report 2021_07_29.kreport --classified-out cseqs#.fq --unclassified-out useqs#.fq --db /pickett_flora/projects/read_simulation/raw_data/snipen_RMS/bei_20_genomes_db/ ../../4_simulate_bei_20_genomes/95_percent/95_percent_R1.fastq ../../4_simulate_bei_20_genomes/95_percent/95_percent_R2.fastq > 2021_07_29_run.txt
+
+/pickett_flora/projects/read_simulation/code/Bracken/bracken -d /pickett_flora/projects/read_simulation/raw_data/snipen_RMS/bei_20_genomes_db/ -i 2021_07_29.kreport -o 2021_07_29.bracken -l S -t 10
+```
+*136224 sequences (40.32 Mbp) processed in 0.765s (10689.2 Kseq/m, 3163.99 Mbp/m).  
+  116446 sequences classified (85.48%)  
+  19778 sequences unclassified (14.52%)*  
+  
+*229458 sequences (67.92 Mbp) processed in 1.249s (11023.0 Kseq/m, 3262.82 Mbp/m).  
+  189927 sequences classified (82.77%)  
+  39531 sequences unclassified (17.23%)*
+
+*295592 sequences (87.50 Mbp) processed in 1.464s (12117.4 Kseq/m, 3586.75 Mbp/m).  
+  240183 sequences classified (81.25%)  
+  55409 sequences unclassified (18.75%)*
+
+align simulated reads to the 20 genomes to compare with the snipen RMS sequencing alignments
+
+```
+spack load bwa@0.7.17
+spack load samtools@1.10
+
+cd /pickett_flora/projects/read_simulation/analyses/snipen_2021_RMS/2021_07_26_test_mock_data/6_bwa_map_simulated_genomes
+
+for query in ../4_simulate_bei_20_genomes/??_percent ; do
+  echo $query
+  query_name=$(basename $query)
+  R1=../../${query}/${query_name}_R1.fastq
+  R2=../../${query}/${query_name}_R2.fastq
+  echo $R1
+  echo $R2
+  mkdir ${query_name}
+  cd ${query_name}
+  for genome in /pickett_flora/projects/read_simulation/raw_data/snipen_RMS/mock_community_ref_genomes/*fna ; do
+    genome_name=$(basename $genome)
+    genome_name=${genome_name%%.fna}
+    mkdir $genome_name
+    cd $genome_name
+    bwa mem $genome $R1 $R2 > ${genome_name}.sam
+    samtools view -b -f 0x2 ${genome_name}.sam > ${genome_name}.bam
+    samtools sort -o ${genome_name}.sorted.bam ${genome_name}.bam
+    samtools index ${genome_name}.sorted.bam
+    samtools stats ${genome_name}.sorted.bam > ${genome_name}_stats.txt
+    cd ..
+  done
+  cd ..
+done
+```
+
+Upon visual inspection using IGV, the simulated data match the Snipen sequences nearly precisely.
+
+## 2020.08.02
+---
+## get depths
+
+```
+spack load samtools@1.10 
+for i in ./GCA* ; do genome=${i#./} ; cd $genome ; samtools depth -o ${genome}_depth.txt -H ${genome}.sorted.bam; cd .. ; done
+```
+
+## reset conda env so pandas can work...
+
+```
+for i in ./GCA* ; do genome=${i#./} ; cd $genome ; depth=$(python3 /pickett_flora/projects/read_simulation/code/scripts/get_samtools_avg_depth.py ${genome}_depth.txt) ; echo "$genome    $depth" ; cd .. ; done
+```
+
+![read abundance and read depth vs. true read depth (all as percentages)](https://github.com/ryandkuster/read_simulation/blob/main/misc/visuals/raw_read_v_read_depth.png)
+
+## 2020.08.16
+---
+## compare depths of taxa using concordance index
+
+Save the resulting data from the sim v. Snipen as 'all_data.csv' in the R script to be opened with Jupyter notebook.
+
+![comparison of Pearson's correlation v. Concordance index](https://github.com/ryandkuster/read_simulation/blob/main/misc/visuals/concordance_v_correlation.png)
