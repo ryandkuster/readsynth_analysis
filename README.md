@@ -1078,3 +1078,9 @@ for i in ./GCA* ; do genome=${i#./} ; cd $genome ; depth=$(python3 /pickett_flor
 Save the resulting data from the sim v. Snipen as 'all_data.csv' in the R script to be opened with Jupyter notebook.
 
 ![comparison of Pearson's correlation v. Concordance index](https://github.com/ryandkuster/read_simulation/blob/main/misc/visuals/concordance_v_correlation.png)
+
+
+## 2020.09.13
+---
+## get summary info for RADseq experiment using Zymo HMW DNA Standard (8 organisms)
+
