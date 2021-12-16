@@ -4,11 +4,13 @@
 
 # **directory structure**
 - README.md **(you're reading me)**
-- analyses/ **(all specific objectives for processing data)**
+- preliminary_analyses/ **(eda for existing RMS datasets)**
   - 1520_genomes_RAD_characteristics
-    - 2021_06_28_test_100_genomes
-    - 2021_06_28_test_1520_genomes
-    - 2021_06_30_quantify_30_genomes
+  - bei_mock_even
+  - liu_2017_RMS
+  - snipen_2021_RMS
+  - zymo_mock_HMW
+- analyses/ **(all specific objectives for processing data)**
 - code/ **(specific software used for analyses)**
 - raw_data/ **(unprocessed data)**
   - 1520_genomes/
@@ -54,7 +56,7 @@ This script downloads (wget) all GenBank assembly statistics for each of the 1,5
 ## 2021.06.28
 ---
 ## **in silico digest each of the 1,520 genomes using MseI and EcoRI motifs using 'readsynth' scripts**
-*<sub><sup>analyses/1520_genomes_RAD_characteristics/2021_06_28_test_1520_genomes/1_RE_digest_genomes</sub></sup>*
+*<sub><sup>preliminary_analyses/1520_genomes_RAD_characteristics/2021_06_28_test_1520_genomes/1_RE_digest_genomes</sub></sup>*
 
 readsynth.py from commit 1e72bf20d58ef8b7af03edc661cca810a3598b85
 
@@ -74,7 +76,7 @@ By default the maximum fragment length is set to mean + 6sd, so for these test, 
 ## 2021.06.29
 ---
 ## **get summary statistics of the 1,520 digests**
-*<sub><sup>analyses/1520_genomes_RAD_characteristics/2021_06_28_test_1520_genomes/2_pull_digest_stats</sub></sup>*
+*<sub><sup>preliminary_analyses/1520_genomes_RAD_characteristics/2021_06_28_test_1520_genomes/2_pull_digest_stats</sub></sup>*
 
 for every template strand ('+') from the raw_digest...csv file, pull the total number of fragments as well as ranges of fragment sizes (e.g. 1 to 200bp, 201 to 400bp, 401 to 600bp).
 
@@ -89,7 +91,7 @@ After normalizing the fragment counts per genome (count/genome(bp)), the most no
 
 ## 2021.06.30
 ---
-*<sub><sup>analyses/1520_genomes_RAD_characteristics/2021_06_30_quantify_30_genomes/1_create_genome_keys</sub></sup>*
+*<sub><sup>preliminary_analyses/1520_genomes_RAD_characteristics/2021_06_30_quantify_30_genomes/1_create_genome_keys</sub></sup>*
 
 ## **produce community profile**
 select 30 genomes and randomly assign copy number to each, then simulate fastq files for each abundance profile provided in the key
@@ -110,7 +112,7 @@ cat file_list.txt | awk -v var="0.02" 'BEGIN {srand()} !/^$/ { if (rand() <= var
 run 'genome_copy_number.py' to randomly generate copy numbers between 1 and 100 per sample and save as a tab-separated key for benchmarking the profiling success of RAD libraries.
 
 ## **produce fastq files from community profile**
-*<sub><sup>analyses/1520_genomes_RAD_characteristics/2021_06_30_quantify_30_genomes/2_simulate_fastq_files</sub></sup>*
+*<sub><sup>preliminary_analyses/1520_genomes_RAD_characteristics/2021_06_30_quantify_30_genomes/2_simulate_fastq_files</sub></sup>*
 
 copy or link the 30 chosen files to the local 'genomes' directory
 
@@ -153,7 +155,7 @@ Finally, a genome copy number of 20 for accession GCA_003433755:
 ---
 ## **community profiling using Kraken2**
 
-*<sub><sup>/pickett_flora/projects/read_simulation/analyses/1520_genomes_RAD_characteristics/2021_06_30_quantify_30_genomes/3_profile_simulated_samples/</sub></sup>*
+*<sub><sup>/pickett_flora/projects/read_simulation/preliminary_analyses/1520_genomes_RAD_characteristics/2021_06_30_quantify_30_genomes/3_profile_simulated_samples/</sub></sup>*
 
 https://github.com/DerrickWood/kraken2/wiki
 
@@ -256,7 +258,7 @@ Run Bracken for abundance estimation using 10 as the default -t threshold level 
 ```
 
 ## **comparing Bracken abundance profiles with fastq files and input abundance keys**
-*<sub><sup>/pickett_flora/projects/read_simulation/analyses/1520_genomes_RAD_characteristics/2021_06_30_quantify_30_genomes</sub></sup>*
+*<sub><sup>/pickett_flora/projects/read_simulation/preliminary_analyses/1520_genomes_RAD_characteristics/2021_06_30_quantify_30_genomes</sub></sup>*
 
 First, the abundance of reads in the fastq file must be considered as separate from the key file, as GC content of the source genome is expected to skew the number of fragments. Second, the original key file needs to be reflected as a percentage of total reads on a per taxid basis.
 
@@ -337,7 +339,7 @@ There. But wait, the header naming won't work with bwa mem:
 for i in *R2.fastq ; do python3 ../../code/scripts/fix_R2_headers2.py $i && mv modified_${i} $i ; done
 ```
 
-*<sub><sup>/pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/1_profile_reads</sub></sup>*
+*<sub><sup>/pickett_flora/projects/read_simulation/preliminary_analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/1_profile_reads</sub></sup>*
 
 Run Kraken as before:
 
@@ -356,7 +358,7 @@ python3 /pickett_flora/projects/read_simulation/code/scripts/pull_kraken_taxids.
 
 The three most prevalent taxa were 816 (Bacteroides), 853 (Faecalibacterium prausnitzii), and 74426 (Collinsella aerofaciens).
 
-*<sub><sup>/pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/2_simulate_f_prausnitzii</sub></sup>*
+*<sub><sup>/pickett_flora/projects/read_simulation/preliminary_analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/2_simulate_f_prausnitzii</sub></sup>*
 
 Download F. prausnitzii
 
@@ -367,7 +369,7 @@ wget "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/003/312/465/GCF_003312465.1_A
 Run readsynth.py (commit 4df8ce1f90394987637b4a83443ec53e808c1af2)
 
 ```
-cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/2_simulate_f_prausnitzii
+cd /pickett_flora/projects/read_simulation/preliminary_analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/2_simulate_f_prausnitzii
 python3 /home/rkuster/readsynth/readsynth.py \
    -genome GCF_003312465.1_ASM331246v1_genomic.fna \
    -o ./output \
@@ -388,7 +390,7 @@ python3 /home/rkuster/readsynth/readsynth.py \
 ---
 ## **map reads from kraken assignments and reads from above simulation of F. prausnitzii to compare sites and depth**
 
-*<sub><sup>/pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping</sub></sup>*
+*<sub><sup>/pickett_flora/projects/read_simulation/preliminary_analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping</sub></sup>*
 
 Grab the reads for each of the three Liu datasets that Kraken identified as F. prausnitzii.
 
@@ -475,7 +477,7 @@ The weighted average insert sd for the SRA data is 120.5860872.
 Run readsynth.py (commit 4cf90a729ccd292c4c78bcfff27f3b546bcfcd50)
 
 ```
-cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/2_simulate_f_prausnitzii
+cd /pickett_flora/projects/read_simulation/preliminary_analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/2_simulate_f_prausnitzii
 python3 /home/rkuster/readsynth/readsynth.py \
   -genome GCF_003312465.1_ASM331246v1_genomic.fna \
   -o ./output2/ \
@@ -501,7 +503,7 @@ python3 /home/rkuster/readsynth/readsynth.py \
 spack load bwa@0.7.17
 spack load samtools@1.10
 
-cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping/
+cd /pickett_flora/projects/read_simulation/preliminary_analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping/
 mkdir simulated_F_prausnitzii_2
 cd simulated_F_prausnitzii_2
 cp ../../2_simulate_f_prausnitzii/output2/GCF_003312465.1_ASM331246v1_genomic.fna_R* ./
@@ -522,7 +524,7 @@ python3 /pickett_flora/projects/read_simulation/code/scripts/get_samtools_avg_de
 spack load bwa@0.7.17
 spack load samtools@1.10
 
-cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping
+cd /pickett_flora/projects/read_simulation/preliminary_analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping
 
 mkdir SRR5298272_non_profiled
 cd SRR5298272_non_profiled
@@ -558,7 +560,7 @@ samtools stats SRR5360684_non_profiled.sorted.bam > SRR5360684_non_profiled_stat
 
 ```
 spack load samtools@1.10
-cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping
+cd /pickett_flora/projects/read_simulation/preliminary_analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping
 samtools depth -o compare_all.depth.txt -H ./simulated_F_prausnitzii/simulated.sorted.bam ./simulated_F_prausnitzii_2/simulated2.sorted.bam ./SRR5298272/SRR5298272.sorted.bam ./SRR5298274/SRR5298274.sorted.bam ./SRR5360684/SRR5360684.sorted.bam
 ```
 
@@ -577,7 +579,7 @@ Also, the mean and sd will be altered to simulate the Liu 2017 F. prausnitzii da
 using readsynth.py (commit eba1aedcc24555c0201c8d5ce5ac0d9ac8a37fda)
 
 ```
-cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_16_compare_copy_number
+cd /pickett_flora/projects/read_simulation/preliminary_analyses/liu_2017_RMS/2021_07_16_compare_copy_number
 cp -r ../2021_07_09_simulate_top_hit/2_simulate_f_prausnitzii/ ./1_simulate_f_prausnitzii
 rm -rf output*
 mkdir output_n_1
@@ -591,7 +593,7 @@ BWA align the reads to the F. prausnitzii reference.
 spack load bwa@0.7.17
 spack load samtools@1.10
 
-cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_16_compare_copy_number
+cd /pickett_flora/projects/read_simulation/preliminary_analyses/liu_2017_RMS/2021_07_16_compare_copy_number
 mkdir 2_map_to_ref
 
 cp ../1_simulate_f_prausnitzii/GCF_003312465.1_ASM331246v1_genomic.fna ./
@@ -672,7 +674,7 @@ map
 ```
 spack load bwa@0.7.17
 spack load samtools@1.10
-cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_20_updated_copy_number/2_map_to_ref/simulation_n_13
+cd /pickett_flora/projects/read_simulation/preliminary_analyses/liu_2017_RMS/2021_07_20_updated_copy_number/2_map_to_ref/simulation_n_13
 bwa mem ../GCF_003312465.1_ASM331246v1_genomic.fna ../../1_simulate_f_prausnitzii/output/GCF_003312465.1_ASM331246v1_genomic.fna_R1.fastq ../../1_simulate_f_prausnitzii/output/GCF_003312465.1_ASM331246v1_genomic.fna_R2.fastq > simulation_n_13.sam
 samtools view -b -f 0x2 simulation_n_13.sam > simulation_n_13.bam
 samtools sort -o simulation_n_13.sorted.bam simulation_n_13.bam
@@ -694,7 +696,7 @@ These results only show on nominal improvement vs. the first simulation (complet
 
 ```
 samtools depth -o SRR5298272_non_profiled.depth.txt -H SRR5298272_non_profiled.sorted.bam
-cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping/SRR5298272_non_profiled
+cd /pickett_flora/projects/read_simulation/preliminary_analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping/SRR5298272_non_profiled
 python3 /pickett_flora/projects/read_simulation/code/scripts/get_samtools_avg_depth.py SRR5298272_non_profiled.depth.txt 
 16.194673036059225
 ```
@@ -703,7 +705,7 @@ The most recent simulation used n=13 based on an earlier depth reading for the p
 
 ```
 spack load samtools@1.10
-cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_20_updated_copy_number/2_map_to_ref/simulation_n_13
+cd /pickett_flora/projects/read_simulation/preliminary_analyses/liu_2017_RMS/2021_07_20_updated_copy_number/2_map_to_ref/simulation_n_13
 samtools depth -o simulation_n_13.depth.txt -H simulation_n_13.sorted.bam
 python3 /pickett_flora/projects/read_simulation/code/scripts/get_samtools_avg_depth.py simulation_n_13.depth.txt 
 7.644556639965016
@@ -725,10 +727,10 @@ source activate ddrage
 Pull only the sequences from the alignments for comparison:
 
 ```
-cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping/SRR5298272_non_profiled
+cd /pickett_flora/projects/read_simulation/preliminary_analyses/liu_2017_RMS/2021_07_09_simulate_top_hit/3_compare_rms_to_sim_mapping/SRR5298272_non_profiled
 samtools view SRR5298272_non_profiled.sorted.bam | awk '{ print $10 }' > SRR5298272_non_profiled_sequences.txt
 
-cd /pickett_flora/projects/read_simulation/analyses/liu_2017_RMS/2021_07_20_updated_copy_number/2_map_to_ref/simulation_n_13
+cd /pickett_flora/projects/read_simulation/preliminary_analyses/liu_2017_RMS/2021_07_20_updated_copy_number/2_map_to_ref/simulation_n_13
 samtools view simulation_n_13.sorted.bam | awk '{ print $10 }' > simulation_n_13_sequences.txt
 ```
 
@@ -796,7 +798,7 @@ for i in SRR*; do fastq-dump --split-files $i ; done
 Use ngscomposer scallop.py (commit 96f847fea7c89f74cc42f52004d43c2b0c5ac88a) trim adapters from reads to leave only genomic RE motif and beyond (EcoRI lost 'G' in ligation process)
 
 ```
-cd /pickett_flora/projects/read_simulation/analyses/snipen_2021_RMS/2021_07_26_test_mock_data/1_front_trim_snipen_seqs
+cd /pickett_flora/projects/read_simulation/preliminary_analyses/snipen_2021_RMS/2021_07_26_test_mock_data/1_front_trim_snipen_seqs
 ln -fs /pickett_flora/projects/read_simulation/raw_data/snipen_RMS/SRR101997*fastq ./
 for i in *1.fastq ; do python3 /home/rkuster/ngscomposer/tools/scallop.py -r1 $i -f 11 ; done
 for i in *2.fastq ; do python3 /home/rkuster/ngscomposer/tools/scallop.py -r1 $i -f 13 ; done
@@ -814,7 +816,7 @@ for i in *fna ; do ../../../code/kraken2/kraken2-build --add-to-library $i --db 
 run kraken taxonomic profiling on reads:
 
 ```
-cd /pickett_flora/projects/read_simulation/analyses/snipen_2021_RMS/2021_07_26_test_mock_data/2_kraken_snipen_seqs
+cd /pickett_flora/projects/read_simulation/preliminary_analyses/snipen_2021_RMS/2021_07_26_test_mock_data/2_kraken_snipen_seqs
 
 mkdir SRR10199716
 mkdir SRR10199724
@@ -900,7 +902,7 @@ spack load samtools@1.10
 cd /pickett_flora/projects/read_simulation/raw_data/snipen_RMS/mock_community_ref_genomes/
 for i in *fna ; do bwa index $i ; done
 
-cd /pickett_flora/projects/read_simulation/analyses/snipen_2021_RMS/2021_07_26_test_mock_data/3_bwa_map_snipen_seqs
+cd /pickett_flora/projects/read_simulation/preliminary_analyses/snipen_2021_RMS/2021_07_26_test_mock_data/3_bwa_map_snipen_seqs
 
 for query in ../2_kraken_snipen_seqs/SRR101997* ; do
   echo ${query#"../2_kraken_snipen_seqs/"}
@@ -986,7 +988,7 @@ done < $1
 run kraken taxonomic profiling on reads:
 
 ```
-cd /pickett_flora/projects/read_simulation/analyses/snipen_2021_RMS/2021_07_26_test_mock_data/5_kraken_simulated_seqs
+cd /pickett_flora/projects/read_simulation/preliminary_analyses/snipen_2021_RMS/2021_07_26_test_mock_data/5_kraken_simulated_seqs
 
 mkdir 50_percent
 mkdir 75_percent
@@ -1025,7 +1027,7 @@ align simulated reads to the 20 genomes to compare with the snipen RMS sequencin
 spack load bwa@0.7.17
 spack load samtools@1.10
 
-cd /pickett_flora/projects/read_simulation/analyses/snipen_2021_RMS/2021_07_26_test_mock_data/6_bwa_map_simulated_genomes
+cd /pickett_flora/projects/read_simulation/preliminary_analyses/snipen_2021_RMS/2021_07_26_test_mock_data/6_bwa_map_simulated_genomes
 
 for query in ../4_simulate_bei_20_genomes/??_percent ; do
   echo $query
@@ -1080,7 +1082,60 @@ Save the resulting data from the sim v. Snipen as 'all_data.csv' in the R script
 ![comparison of Pearson's correlation v. Concordance index](https://github.com/ryandkuster/read_simulation/blob/main/misc/visuals/concordance_v_correlation.png)
 
 
-## 2020.09.13
+## 2020.12.03
 ---
-## get summary info for RADseq experiment using Zymo HMW DNA Standard (8 organisms)
+## get Snipen data read sizes
 
+The Snipen datasets were previously front-trimmed to remove sequences of custom barcoded adapters. The number of lines for each file are listed below:
+
+```
+   2632776 trimmed_se.SRR10199716_1.fastq
+   2632776 trimmed_se.SRR10199716_2.fastq
+   6428700 trimmed_se.SRR10199724_1.fastq
+   6428700 trimmed_se.SRR10199724_2.fastq
+   3159568 trimmed_se.SRR10199725_1.fastq
+   3159568 trimmed_se.SRR10199725_2.fastq
+```
+
+... which translates to:
+
+```
+SRR10199716 - 658,194
+SRR10199724 - 1,607,175
+SRR10199725 - 789,892
+```
+
+Kraken's output does not provide positional information on where in the reference genome a read maps to, therefore, the output of a separate alignment is needed.
+
+## 2020.12.16
+---
+## resimulate Snipen data and attempt to extract cut_prob
+
+An updated version of readsynth.py (commit c8bb5eea5d79257ccd3367f6bad1e45f3b395179) was used to simulate the largest SRA accession from Snipen et al. 2021 with the following command:
+
+```
+python3 /home/rkuster/readsynth/readsynth.py \
+    -m1 ecori \
+    -m2 msei \
+    -l 148 \
+    -n 1607175 \
+    -mean 156 \
+    -up_bound 346 \
+    -cut_prob 0.95 \
+    -o 95_percent \
+    -genome metagenome.csv \
+    -a1 /pickett_flora/projects/read_simulation/raw_data/adapters/snipen_ddRADseq/snipen_ddRADseq_adapters_R1.txt \
+    -a2 /pickett_flora/projects/read_simulation/raw_data/adapters/snipen_ddRADseq/snipen_ddRADseq_adapters_R2.txt \
+    -a1s 7 \
+    -a2s 4
+```
+
+The mean and upper bound values were determined by previous samtools stats on insert length and standard deviation of the Snipen data mapped to the 20 reference genomes.
+
+After simulating the 20 genomes into a single fastq file, reads were again mapped to the 20 references followed by samtools filtering for correctly oriented, paired reads as previously performed.
+
+After Samtools was used to return statistics, Samtools view was used to pull the start/end positions of the mapped reads for further analysis:
+
+```
+samtools view GCA_000005845.2_ASM584v2_genomic.sorted.bam | awk '{print $1 "\t" $3 "\t" $4 "\t" $4+length($10)-1 "\t" $9}' > locs_95_percent_GCA_000005845.2_ASM584v2_genomic.txt
+```
