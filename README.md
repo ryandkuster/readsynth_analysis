@@ -11,6 +11,8 @@
   - snipen_2021_RMS
   - zymo_mock_HMW
 - analyses/ **(all specific objectives for processing data)**
+  - snipen_2021
+    - 1_extract_features
 - code/ **(specific software used for analyses)**
 - raw_data/ **(unprocessed data)**
   - 1520_genomes/
@@ -1056,7 +1058,7 @@ done
 
 Upon visual inspection using IGV, the simulated data match the Snipen sequences nearly precisely.
 
-## 2020.08.02
+## 2021.08.02
 ---
 ## get depths
 
@@ -1073,7 +1075,7 @@ for i in ./GCA* ; do genome=${i#./} ; cd $genome ; depth=$(python3 /pickett_flor
 
 ![read abundance and read depth vs. true read depth (all as percentages)](https://github.com/ryandkuster/read_simulation/blob/main/misc/visuals/raw_read_v_read_depth.png)
 
-## 2020.08.16
+## 2021.08.16
 ---
 ## compare depths of taxa using concordance index
 
@@ -1082,7 +1084,7 @@ Save the resulting data from the sim v. Snipen as 'all_data.csv' in the R script
 ![comparison of Pearson's correlation v. Concordance index](https://github.com/ryandkuster/read_simulation/blob/main/misc/visuals/concordance_v_correlation.png)
 
 
-## 2020.12.03
+## 2021.12.03
 ---
 ## get Snipen data read sizes
 
@@ -1107,7 +1109,7 @@ SRR10199725 - 789,892
 
 Kraken's output does not provide positional information on where in the reference genome a read maps to, therefore, the output of a separate alignment is needed.
 
-## 2020.12.16
+## 2021.12.16
 ---
 ## resimulate Snipen data and attempt to extract cut_prob
 
@@ -1119,15 +1121,22 @@ python3 /home/rkuster/readsynth/readsynth.py \
     -m2 msei \
     -l 148 \
     -n 1607175 \
-    -mean 156 \
-    -up_bound 346 \
+    -mean 178 \
+    -up_bound 368 \
     -cut_prob 0.95 \
     -o 95_percent \
     -genome metagenome.csv \
     -a1 /pickett_flora/projects/read_simulation/raw_data/adapters/snipen_ddRADseq/snipen_ddRADseq_adapters_R1.txt \
     -a2 /pickett_flora/projects/read_simulation/raw_data/adapters/snipen_ddRADseq/snipen_ddRADseq_adapters_R2.txt \
-    -a1s 7 \
+    -a1s 7 \ 
     -a2s 4
+```
+
+The reads were trimmed to be identical with the Snipen reads to help make alignments identical.
+
+```
+python3 /home/rkuster/ngscomposer/tools/scallop.py -r1 sim_metagenome_R1.fastq -f 10 -o ../../2_trim_simulation/
+python3 /home/rkuster/ngscomposer/tools/scallop.py -r1 sim_metagenome_R2.fastq -f 12 -o ../../2_trim_simulation/
 ```
 
 The mean and upper bound values were determined by previous samtools stats on insert length and standard deviation of the Snipen data mapped to the 20 reference genomes.
@@ -1139,3 +1148,29 @@ After Samtools was used to return statistics, Samtools view was used to pull the
 ```
 samtools view GCA_000005845.2_ASM584v2_genomic.sorted.bam | awk '{print $1 "\t" $3 "\t" $4 "\t" $4+length($10)-1 "\t" $9}' > locs_95_percent_GCA_000005845.2_ASM584v2_genomic.txt
 ```
+
+
+## 2021.01.25
+---
+## use Snipen alignments to extract distribution of reads/locus (test for PCR duplicate bias)
+
+After aligning reads
+```
+/pickett_flora/projects/read_simulation/preliminary_analyses/snipen_2021_RMS/2021_07_26_test_mock_data/3_bwa_map_snipen_seqs/SRR10199716/GCA_000005845.2_ASM584v2_genomic
+
+samtools collate -o 1_col.bam GCA_000005845.2_ASM584v2_genomic.sorted.bam
+samtools fixmate -m 1_col.bam 2_fix.bam
+samtools sort -o 3_sort_fix.bam 2_fix.bam
+samtools markdup -s -S -f duplicate_stats.txt -m t 3_sort_fix.bam 4_marked.bam
+samtools view -h -o 5_marked.sam 4_marked.bam
+```
+
+/pickett_flora/projects/read_simulation/analysis/snipen_2021_RMS/2022_06_02
+
+
+
+
+
+
+
+
