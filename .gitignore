@@ -11,8 +11,9 @@ __pycache__/*
 *fastq.gz
 
 analysis/
-!*/run*.sh
-!*/environment.log
+!analysis/*/run*.sh
+!analysis/*/environment.log
+!analysis/*/*environment.log
 
 code/kraken2
 code/Bracken/
