@@ -1,0 +1,20 @@
+# packages in environment at /home/rkuster/miniconda3/envs/fastqc:
+#
+# Name                    Version                   Build  Channel
+_libgcc_mutex             0.1                 conda_forge    conda-forge
+_openmp_mutex             4.5                       2_gnu    conda-forge
+expat                     2.4.8                h27087fc_0    conda-forge
+fastqc                    0.11.9               hdfd78af_1    bioconda
+font-ttf-dejavu-sans-mono 2.37                 hab24e00_0    conda-forge
+fontconfig                2.14.0               h8e229c2_0    conda-forge
+freetype                  2.10.4               h0708190_1    conda-forge
+libgcc-ng                 12.1.0              h8d9b700_16    conda-forge
+libgomp                   12.1.0              h8d9b700_16    conda-forge
+libnsl                    2.0.0                h7f98852_0    conda-forge
+libpng                    1.6.37               h21135ba_2    conda-forge
+libstdcxx-ng              12.1.0              ha89aaad_16    conda-forge
+libuuid                   2.32.1            h7f98852_1000    conda-forge
+libzlib                   1.2.12               h166bdaf_0    conda-forge
+openjdk                   8.0.312              h7f98852_0    conda-forge
+perl                      5.32.1          2_h7f98852_perl5    conda-forge
+zlib                      1.2.12               h166bdaf_0    conda-forge
