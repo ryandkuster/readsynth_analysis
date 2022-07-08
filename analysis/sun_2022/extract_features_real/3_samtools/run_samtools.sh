@@ -24,7 +24,7 @@ for query in ../2_bwa_mem/mock* ; do
     samtools index sort_${genome_name}.bam
     
     # get the per-position depth
-    samtools depth -o depth_${genome_name}.txt -H sort_${genome_name}.bam
+    samtools depth -a -o depth_${genome_name}.txt -H sort_${genome_name}.bam
 
     cd ..
   done
