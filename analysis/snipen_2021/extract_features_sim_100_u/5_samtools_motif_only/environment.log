@@ -1,0 +1,26 @@
+# packages in environment at /home/rkuster/miniconda3/envs/samtools:
+#
+# Name                    Version                   Build  Channel
+_libgcc_mutex             0.1                 conda_forge    conda-forge
+_openmp_mutex             4.5                       2_gnu    conda-forge
+bzip2                     1.0.8                h7f98852_4    conda-forge
+c-ares                    1.18.1               h7f98852_0    conda-forge
+ca-certificates           2022.5.18.1          ha878542_0    conda-forge
+htslib                    1.15.1               h9753748_0    bioconda
+keyutils                  1.6.1                h166bdaf_0    conda-forge
+krb5                      1.19.3               h3790be6_0    conda-forge
+libcurl                   7.83.1               h7bff187_0    conda-forge
+libdeflate                1.10                 h7f98852_0    conda-forge
+libedit                   3.1.20191231         he28a2e2_2    conda-forge
+libev                     4.33                 h516909a_1    conda-forge
+libgcc-ng                 12.1.0              h8d9b700_16    conda-forge
+libgomp                   12.1.0              h8d9b700_16    conda-forge
+libnghttp2                1.47.0               h727a467_0    conda-forge
+libssh2                   1.10.0               ha56f1ee_2    conda-forge
+libstdcxx-ng              12.1.0              ha89aaad_16    conda-forge
+libzlib                   1.2.12               h166bdaf_0    conda-forge
+ncurses                   6.3                  h27087fc_1    conda-forge
+openssl                   1.1.1o               h166bdaf_0    conda-forge
+samtools                  1.15.1               h1170115_0    bioconda
+xz                        5.2.5                h516909a_1    conda-forge
+zlib                      1.2.12               h166bdaf_0    conda-forge
