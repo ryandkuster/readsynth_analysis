@@ -93,44 +93,57 @@ motif_combine_depths(){
 #
 #
 #
-smsd1=/pickett_flora/projects/read_simulation/analysis/snipen_2021/extract_features_sim_mean_sd/5_samtools_motif_only/SRR10199716_sim
-smsd1_out=/pickett_flora/projects/read_simulation/analysis/snipen_2021/depth_comparison/mo_sim_mean_sd_1_combined_depths.tsv
-motif_combine_depths $smsd1 $smsd1_out
+#smsd1=/pickett_flora/projects/read_simulation/analysis/snipen_2021/extract_features_sim_mean_sd/5_samtools_motif_only/SRR10199716_sim
+#smsd1_out=/pickett_flora/projects/read_simulation/analysis/snipen_2021/depth_comparison/mo_sim_mean_sd_1_combined_depths.tsv
+#motif_combine_depths $smsd1 $smsd1_out
+#
+#smsd2=/pickett_flora/projects/read_simulation/analysis/snipen_2021/extract_features_sim_mean_sd/5_samtools_motif_only/SRR10199724_sim
+#smsd2_out=/pickett_flora/projects/read_simulation/analysis/snipen_2021/depth_comparison/mo_sim_mean_sd_2_combined_depths.tsv
+#motif_combine_depths $smsd2 $smsd2_out
+#
+#smsd3=/pickett_flora/projects/read_simulation/analysis/snipen_2021/extract_features_sim_mean_sd/5_samtools_motif_only/SRR10199725_sim
+#smsd3_out=/pickett_flora/projects/read_simulation/analysis/snipen_2021/depth_comparison/mo_sim_mean_sd_3_combined_depths.tsv
+#motif_combine_depths $smsd3 $smsd3_out
+#
+#
+#
+#s100u1=/pickett_flora/projects/read_simulation/analysis/snipen_2021/extract_features_sim_100_u/5_samtools_motif_only/SRR10199716_sim
+#s100u1_out=/pickett_flora/projects/read_simulation/analysis/snipen_2021/depth_comparison/mo_sim_100u_1_combined_depths.tsv
+#motif_combine_depths $s100u1 $s100u1_out
+#
+#s100u2=/pickett_flora/projects/read_simulation/analysis/snipen_2021/extract_features_sim_100_u/5_samtools_motif_only/SRR10199724_sim
+#s100u2_out=/pickett_flora/projects/read_simulation/analysis/snipen_2021/depth_comparison/mo_sim_100u_2_combined_depths.tsv
+#motif_combine_depths $s100u2 $s100u2_out
+#
+#s100u3=/pickett_flora/projects/read_simulation/analysis/snipen_2021/extract_features_sim_100_u/5_samtools_motif_only/SRR10199725_sim
+#s100u3_out=/pickett_flora/projects/read_simulation/analysis/snipen_2021/depth_comparison/mo_sim_100u_3_combined_depths.tsv
+#motif_combine_depths $s100u3 $s100u3_out
+#
+#
+#
+#s80c1=/pickett_flora/projects/read_simulation/analysis/snipen_2021/extract_features_sim_80_c/5_samtools_motif_only/SRR10199716_sim
+#s80c1_out=/pickett_flora/projects/read_simulation/analysis/snipen_2021/depth_comparison/mo_sim_80c_1_combined_depths.tsv
+#motif_combine_depths $s80c1 $s80c1_out
+#
+#s80c2=/pickett_flora/projects/read_simulation/analysis/snipen_2021/extract_features_sim_80_c/5_samtools_motif_only/SRR10199724_sim
+#s80c2_out=/pickett_flora/projects/read_simulation/analysis/snipen_2021/depth_comparison/mo_sim_80c_2_combined_depths.tsv
+#motif_combine_depths $s80c2 $s80c2_out
+#
+#s80c3=/pickett_flora/projects/read_simulation/analysis/snipen_2021/extract_features_sim_80_c/5_samtools_motif_only/SRR10199725_sim
+#s80c3_out=/pickett_flora/projects/read_simulation/analysis/snipen_2021/depth_comparison/mo_sim_80c_3_combined_depths.tsv
+#motif_combine_depths $s80c3 $s80c3_out
 
-smsd2=/pickett_flora/projects/read_simulation/analysis/snipen_2021/extract_features_sim_mean_sd/5_samtools_motif_only/SRR10199724_sim
-smsd2_out=/pickett_flora/projects/read_simulation/analysis/snipen_2021/depth_comparison/mo_sim_mean_sd_2_combined_depths.tsv
-motif_combine_depths $smsd2 $smsd2_out
 
-smsd3=/pickett_flora/projects/read_simulation/analysis/snipen_2021/extract_features_sim_mean_sd/5_samtools_motif_only/SRR10199725_sim
-smsd3_out=/pickett_flora/projects/read_simulation/analysis/snipen_2021/depth_comparison/mo_sim_mean_sd_3_combined_depths.tsv
-motif_combine_depths $smsd3 $smsd3_out
+s100c1=/pickett_flora/projects/read_simulation/analysis/snipen_2021/extract_features_sim_100_c/5_samtools_motif_only/SRR10199716_sim
+s100c1_out=/pickett_flora/projects/read_simulation/analysis/snipen_2021/depth_comparison/mo_sim_100c_1_combined_depths.tsv
+motif_combine_depths $s100c1 $s100c1_out
 
+s100c2=/pickett_flora/projects/read_simulation/analysis/snipen_2021/extract_features_sim_100_c/5_samtools_motif_only/SRR10199724_sim
+s100c2_out=/pickett_flora/projects/read_simulation/analysis/snipen_2021/depth_comparison/mo_sim_100c_2_combined_depths.tsv
+motif_combine_depths $s100c2 $s100c2_out
 
-
-s100u1=/pickett_flora/projects/read_simulation/analysis/snipen_2021/extract_features_sim_100_u/5_samtools_motif_only/SRR10199716_sim
-s100u1_out=/pickett_flora/projects/read_simulation/analysis/snipen_2021/depth_comparison/mo_sim_100u_1_combined_depths.tsv
-motif_combine_depths $s100u1 $s100u1_out
-
-s100u2=/pickett_flora/projects/read_simulation/analysis/snipen_2021/extract_features_sim_100_u/5_samtools_motif_only/SRR10199724_sim
-s100u2_out=/pickett_flora/projects/read_simulation/analysis/snipen_2021/depth_comparison/mo_sim_100u_2_combined_depths.tsv
-motif_combine_depths $s100u2 $s100u2_out
-
-s100u3=/pickett_flora/projects/read_simulation/analysis/snipen_2021/extract_features_sim_100_u/5_samtools_motif_only/SRR10199725_sim
-s100u3_out=/pickett_flora/projects/read_simulation/analysis/snipen_2021/depth_comparison/mo_sim_100u_3_combined_depths.tsv
-motif_combine_depths $s100u3 $s100u3_out
-
-
-
-s80c1=/pickett_flora/projects/read_simulation/analysis/snipen_2021/extract_features_sim_80_c/5_samtools_motif_only/SRR10199716_sim
-s80c1_out=/pickett_flora/projects/read_simulation/analysis/snipen_2021/depth_comparison/mo_sim_80c_1_combined_depths.tsv
-motif_combine_depths $s80c1 $s80c1_out
-
-s80c2=/pickett_flora/projects/read_simulation/analysis/snipen_2021/extract_features_sim_80_c/5_samtools_motif_only/SRR10199724_sim
-s80c2_out=/pickett_flora/projects/read_simulation/analysis/snipen_2021/depth_comparison/mo_sim_80c_2_combined_depths.tsv
-motif_combine_depths $s80c2 $s80c2_out
-
-s80c3=/pickett_flora/projects/read_simulation/analysis/snipen_2021/extract_features_sim_80_c/5_samtools_motif_only/SRR10199725_sim
-s80c3_out=/pickett_flora/projects/read_simulation/analysis/snipen_2021/depth_comparison/mo_sim_80c_3_combined_depths.tsv
-motif_combine_depths $s80c3 $s80c3_out
+s100c3=/pickett_flora/projects/read_simulation/analysis/snipen_2021/extract_features_sim_100_c/5_samtools_motif_only/SRR10199725_sim
+s100c3_out=/pickett_flora/projects/read_simulation/analysis/snipen_2021/depth_comparison/mo_sim_100c_3_combined_depths.tsv
+motif_combine_depths $s100c3 $s100c3_out
 
 

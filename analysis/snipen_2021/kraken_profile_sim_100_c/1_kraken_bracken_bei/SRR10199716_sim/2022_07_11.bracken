@@ -1,0 +1,21 @@
+name	taxonomy_id	taxonomy_lvl	kraken_assigned_reads	added_reads	new_est_reads	fraction_total_reads
+Staphylococcus epidermidis	1282	S	36921	637	37558	0.06111
+Staphylococcus aureus	1280	S	36007	448	36455	0.05931
+Listeria monocytogenes	1639	S	57916	0	57916	0.09423
+Bacillus cereus	1396	S	41476	0	41476	0.06748
+Streptococcus pneumoniae	1313	S	45761	0	45761	0.07446
+Streptococcus mutans	1309	S	32411	0	32411	0.05273
+Streptococcus agalactiae	1311	S	23093	0	23093	0.03757
+Enterococcus faecalis	1351	S	47001	0	47001	0.07647
+Lactobacillus gasseri	1596	S	24945	0	24945	0.04059
+Clostridium beijerinckii	1520	S	37227	0	37227	0.06057
+Cutibacterium acnes	1747	S	20028	0	20028	0.03259
+Schaalia odontolytica	1660	S	4983	0	4983	0.00811
+Deinococcus radiodurans	1299	S	9863	0	9863	0.01605
+Acinetobacter baumannii	470	S	37979	0	37979	0.06179
+Escherichia coli	562	S	30106	0	30106	0.04898
+Pseudomonas aeruginosa	287	S	7461	0	7461	0.01214
+Helicobacter pylori	210	S	27736	0	27736	0.04513
+Neisseria meningitidis	487	S	17833	0	17833	0.02902
+Cereibacter sphaeroides	1063	S	7835	0	7835	0.01275
+Phocaeicola vulgatus	821	S	66939	0	66939	0.10891
