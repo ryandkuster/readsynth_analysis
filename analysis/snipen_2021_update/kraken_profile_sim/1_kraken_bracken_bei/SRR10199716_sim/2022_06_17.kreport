@@ -1,0 +1,116 @@
+  2.34	15413	15413	U	0	unclassified
+ 97.66	642100	0	R	1	root
+ 97.66	642100	0	R1	131567	  cellular organisms
+ 97.66	642100	0	D	2	    Bacteria
+ 65.99	433924	0	D1	1783272	      Terrabacteria group
+ 59.75	392879	0	P	1239	        Firmicutes
+ 53.95	354706	0	C	91061	          Bacilli
+ 26.99	177474	2	O	1385	            Bacillales
+ 11.47	75447	0	F	90964	              Staphylococcaceae
+ 11.47	75447	789	G	1279	                Staphylococcus
+  5.76	37905	0	S	1282	                  Staphylococcus epidermidis
+  5.76	37905	37905	S1	176280	                    Staphylococcus epidermidis ATCC 12228
+  5.59	36753	0	S	1280	                  Staphylococcus aureus
+  5.59	36753	0	S1	367830	                    Staphylococcus aureus subsp. aureus USA300
+  5.59	36753	36753	S2	451516	                      Staphylococcus aureus subsp. aureus USA300_TCH1516
+  9.13	60002	0	F	186820	              Listeriaceae
+  9.13	60002	0	G	1637	                Listeria
+  9.13	60002	0	S	1639	                  Listeria monocytogenes
+  9.13	60002	60002	S1	169963	                    Listeria monocytogenes EGD-e
+  6.39	42023	0	F	186817	              Bacillaceae
+  6.39	42023	0	G	1386	                Bacillus
+  6.39	42023	0	G1	86661	                  Bacillus cereus group
+  6.39	42023	0	S	1396	                    Bacillus cereus
+  6.39	42023	42023	S1	222523	                      Bacillus cereus ATCC 10987
+ 26.95	177232	0	O	186826	            Lactobacillales
+ 15.89	104494	0	F	1300	              Streptococcaceae
+ 15.89	104494	0	G	1301	                Streptococcus
+  7.27	47784	0	S	1313	                  Streptococcus pneumoniae
+  7.27	47784	47784	S1	170187	                    Streptococcus pneumoniae TIGR4
+  5.07	33338	0	S	1309	                  Streptococcus mutans
+  5.07	33338	33338	S1	210007	                    Streptococcus mutans UA159
+  3.55	23372	0	S	1311	                  Streptococcus agalactiae
+  3.55	23372	0	S1	216466	                    Streptococcus agalactiae serogroup V
+  3.55	23372	23372	S2	208435	                      Streptococcus agalactiae 2603V/R
+  7.25	47673	0	F	81852	              Enterococcaceae
+  7.25	47673	0	G	1350	                Enterococcus
+  7.25	47673	0	S	1351	                  Enterococcus faecalis
+  7.25	47673	47673	S1	474186	                    Enterococcus faecalis OG1RF
+  3.81	25065	0	F	33958	              Lactobacillaceae
+  3.81	25065	0	G	1578	                Lactobacillus
+  3.81	25065	0	S	1596	                  Lactobacillus gasseri
+  3.81	25065	25065	S1	324831	                    Lactobacillus gasseri ATCC 33323 = JCM 1131
+  5.81	38173	0	C	186801	          Clostridia
+  5.81	38173	0	O	186802	            Eubacteriales
+  5.81	38173	0	F	31979	              Clostridiaceae
+  5.81	38173	0	G	1485	                Clostridium
+  5.81	38173	0	S	1520	                  Clostridium beijerinckii
+  5.81	38173	38173	S1	290402	                    Clostridium beijerinckii NCIMB 8052
+  4.59	30170	0	P	201174	        Actinobacteria
+  4.59	30170	0	C	1760	          Actinomycetia
+  3.66	24053	0	O	85009	            Propionibacteriales
+  3.66	24053	0	F	31957	              Propionibacteriaceae
+  3.66	24053	0	G	1912216	                Cutibacterium
+  3.66	24053	0	S	1747	                  Cutibacterium acnes
+  3.66	24053	24053	S1	267747	                    Cutibacterium acnes KPA171202
+  0.93	6117	0	O	2037	            Actinomycetales
+  0.93	6117	0	F	2049	              Actinomycetaceae
+  0.93	6117	0	G	2529408	                Schaalia
+  0.93	6117	0	S	1660	                  Schaalia odontolytica
+  0.93	6117	6117	S1	411466	                    Schaalia odontolytica ATCC 17982
+  1.65	10875	0	P	1297	        Deinococcus-Thermus
+  1.65	10875	0	C	188787	          Deinococci
+  1.65	10875	0	O	118964	            Deinococcales
+  1.65	10875	0	F	183710	              Deinococcaceae
+  1.65	10875	0	G	1298	                Deinococcus
+  1.65	10875	0	S	1299	                  Deinococcus radiodurans
+  1.65	10875	10875	S1	243230	                    Deinococcus radiodurans R1
+ 20.65	135793	0	P	1224	      Proteobacteria
+ 12.12	79680	0	C	1236	        Gammaproteobacteria
+  5.90	38791	0	O	2887326	          Moraxellales
+  5.90	38791	0	F	468	            Moraxellaceae
+  5.90	38791	0	G	469	              Acinetobacter
+  5.90	38791	0	G1	909768	                Acinetobacter calcoaceticus/baumannii complex
+  5.90	38791	0	S	470	                  Acinetobacter baumannii
+  5.90	38791	38791	S1	400667	                    Acinetobacter baumannii ATCC 17978
+  4.92	32321	0	O	91347	          Enterobacterales
+  4.92	32321	0	F	543	            Enterobacteriaceae
+  4.92	32321	0	G	561	              Escherichia
+  4.92	32321	0	S	562	                Escherichia coli
+  4.92	32321	0	S1	83333	                  Escherichia coli K-12
+  4.92	32321	32321	S2	511145	                    Escherichia coli str. K-12 substr. MG1655
+  1.30	8568	0	O	72274	          Pseudomonadales
+  1.30	8568	0	F	135621	            Pseudomonadaceae
+  1.30	8568	0	G	286	              Pseudomonas
+  1.30	8568	0	G1	136841	                Pseudomonas aeruginosa group
+  1.30	8568	0	S	287	                  Pseudomonas aeruginosa
+  1.30	8568	8568	S1	208964	                    Pseudomonas aeruginosa PAO1
+  4.34	28535	0	P1	68525	        delta/epsilon subdivisions
+  4.34	28535	0	C	29547	          Epsilonproteobacteria
+  4.34	28535	0	O	213849	            Campylobacterales
+  4.34	28535	0	F	72293	              Helicobacteraceae
+  4.34	28535	0	G	209	                Helicobacter
+  4.34	28535	0	S	210	                  Helicobacter pylori
+  4.34	28535	28535	S1	85962	                    Helicobacter pylori 26695
+  2.95	19400	0	C	28216	        Betaproteobacteria
+  2.95	19400	0	O	206351	          Neisseriales
+  2.95	19400	0	F	481	            Neisseriaceae
+  2.95	19400	0	G	482	              Neisseria
+  2.95	19400	0	S	487	                Neisseria meningitidis
+  2.95	19400	0	S1	491	                  Neisseria meningitidis serogroup B
+  2.95	19400	19400	S2	122586	                    Neisseria meningitidis MC58
+  1.24	8178	0	C	28211	        Alphaproteobacteria
+  1.24	8178	0	O	204455	          Rhodobacterales
+  1.24	8178	0	F	31989	            Rhodobacteraceae
+  1.24	8178	0	G	1653176	              Cereibacter
+  1.24	8178	0	S	1063	                Cereibacter sphaeroides
+  1.24	8178	8178	S1	272943	                  Cereibacter sphaeroides 2.4.1
+ 11.01	72383	0	D1	1783270	      FCB group
+ 11.01	72383	0	D2	68336	        Bacteroidetes/Chlorobi group
+ 11.01	72383	0	P	976	          Bacteroidetes
+ 11.01	72383	0	C	200643	            Bacteroidia
+ 11.01	72383	0	O	171549	              Bacteroidales
+ 11.01	72383	0	F	815	                Bacteroidaceae
+ 11.01	72383	0	G	909656	                  Phocaeicola
+ 11.01	72383	0	S	821	                    Phocaeicola vulgatus
+ 11.01	72383	72383	S1	435590	                      Phocaeicola vulgatus ATCC 8482
