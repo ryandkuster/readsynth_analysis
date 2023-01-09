@@ -10,5 +10,5 @@ ln -s ../../simulate/SRR10199725_output/error_sim_metagenome_R1.fastq ./SRR10199
 ln -s ../../simulate/SRR10199725_output/error_sim_metagenome_R2.fastq ./SRR10199725_sim_2.fastq
 
 for fastq in ./*fastq ; do
-  fastqc $fastq
+  fastqc $fastq -o ./
 done

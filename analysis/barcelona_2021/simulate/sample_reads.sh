@@ -1,1 +1,0 @@
-python3 /home/rkuster/readsynth/scripts/sample_fastq.py -r1 /pickett_flora/projects/read_simulation/raw_data/barcelona_16S/SRR14311481_1.fastq -r2 /pickett_flora/projects/read_simulation/raw_data/barcelona_16S/SRR14311481_2.fastq -p 10 -l 301 -o ./

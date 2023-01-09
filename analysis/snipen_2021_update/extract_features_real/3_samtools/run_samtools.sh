@@ -13,11 +13,8 @@ for query in ../2_bwa_mem/SRR* ; do
     mkdir $genome_name
     cd $genome_name
 
-    # keep only those reads with correct read orientation in pairs
-    samtools view -b -f 0x2 ../../${query}/${genome_name}/${genome_name}.sam > ${genome_name}.bam
-    
     # sort to run stats before fixmate
-    samtools sort -o sort_${genome_name}.bam ${genome_name}.bam
+    samtools sort -o sort_${genome_name}.bam ../../${query}/${genome_name}/${genome_name}.bam
     samtools stats sort_${genome_name}.bam > stats_${genome_name}.txt
     
     # collate is necessary to use fixmate
@@ -35,9 +32,6 @@ for query in ../2_bwa_mem/SRR* ; do
     # get the per-position depth
     samtools depth -a -o depth_${genome_name}.txt -H sort_fixmate_${genome_name}.bam
     
-    echo -e "query\tflag\tref\tstart\tend\tedit_dist\tread_length\tlength" > summary_${genome_name}.tsv 
-    samtools view sort_fixmate_${genome_name}.sam | awk '{print $1 "\t" $2 "\t" $3 "\t" $4 "\t" $4+length($10)-1 "\t" $12 "\t" length($10) "\t" $9}' >> summary_${genome_name}.tsv
-
     cd ..
   done
   cd ..

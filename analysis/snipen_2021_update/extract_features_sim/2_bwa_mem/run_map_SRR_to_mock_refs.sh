@@ -1,5 +1,5 @@
 eval "$(conda shell.bash hook)"
-conda activate bwa
+conda activate bwa_and_samtools
 conda list > environment.log
 
 for query in ../1_cutadapt_trim/trimmed*1.fastq ; do
@@ -19,7 +19,7 @@ for query in ../1_cutadapt_trim/trimmed*1.fastq ; do
     genome_name=${genome_name%%.fna}
     mkdir $genome_name
     cd $genome_name
-    bwa mem $genome $R1 $R2 > ${genome_name}.sam
+    bwa mem -t 8 $genome $R1 $R2 | samtools view -b -f 0x2 > ${genome_name}.bam
     cd ..
   done
   cd ..
