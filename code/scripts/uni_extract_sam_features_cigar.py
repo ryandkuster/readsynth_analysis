@@ -5,15 +5,30 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 import pandas as pd
+import re
 import seaborn as sns
 import statistics
 import sys
 
 
 '''
-NOTE: this is designed specifically for ECORI and MSEI libraries
+NOTE: this is designed with the assumption that aligned reads begin and end
+at the canonical cut site:
+    e.g.:
+    v
+    GAATTCNNNNNNNNNNTTAA (ecori and msei) original fragment
+     AATTCNNNNNNNNNNTTAA (ecori and msei) forward read
+     TAANNNNNNNNNNGAATTC (ecori and msei) reverse read
 
--i is a abundance table (key) similar to the readsynth input, except
+if the reads for some reason begin before or after this cut site, adjust using
+the -x1 and -x2 arguments:
+    e.g.:
+       v 
+    CATGNNNNNNNNNNACGT (nlaiii and hpych4iv) original fragment
+    CATGNNNNNNNNNNACGT (nlaiii and hpych4iv) forward read ('CATG' should be gone)
+    use -x1 4 to account for this difference
+
+-i is an abundance table (key) similar to the readsynth input, except
 that instead of the path to the reference genomes, it will give the path to each
 
     mapped sam file for that genome
@@ -35,17 +50,25 @@ abundance that is expected)
 
 def main():
     args = parse_user_input()
+    get_motif_adjustments(args)
 
     final_df = pd.DataFrame()
     key = pd.read_csv(args.i, header=None)
     key_sum = sum(key[1].to_list())
     for sam, label, cut_sites in zip(key[0].to_list(), key[1].to_list(), key[2].to_list()):
-        genome_name = cut_sites.split('/')[-1][11:-8]
+        if cut_sites.endswith('.fna.csv'):
+            genome_name = cut_sites.split('/')[-1][11:-8]
+        elif cut_sites.endswith('.fna.gz.csv'):
+            genome_name = cut_sites.split('/')[-1][11:-11]
+        else:
+            sys.exit(f'genome name suffix not known')
         print(genome_name)
         df = process_sam(sam, args)
+        if df is False:
+            continue
         cut_sites = pd.read_csv(cut_sites)
         df, cut_sites = remove_unmatched(df, cut_sites)
-        cut_sites = count_fragments(df, cut_sites)
+        cut_sites = count_fragments(df, cut_sites, args)
         cut_sites['copy_number'] = label
         cut_sites['rel_abund'] = label/key_sum
         cut_sites['genome'] = genome_name
@@ -73,10 +96,16 @@ def main():
 
     calculate_cut_efficiency(final_df, args)
 
+    if args.nosam:
+        sys.exit()
+
     print('\nwriting sam files with unique hits that match motifs')
 
     for sam, label, cut_sites in zip(key[0].to_list(), key[1].to_list(), key[2].to_list()):
-        genome_name = cut_sites.split('/')[-1][11:-8]
+        if cut_sites.endswith('.fna.csv'):
+            genome_name = cut_sites.split('/')[-1][11:-8]
+        elif cut_sites.endswith('.fna.gz.csv'):
+            genome_name = cut_sites.split('/')[-1][11:-11]
         print(genome_name)
         tmp_df = final_df[final_df['genome'] == genome_name].copy()
         q_ls = [j for i in tmp_df['sam_queries'].to_list() for j in i]
@@ -102,12 +131,37 @@ def parse_user_input():
     parser.add_argument('-s', type=int, required=True,
                         help='when adjusting for imperfect adapter removal, soft clips to allow')
 
+    parser.add_argument('-m1', type=str, required=True,
+                        help='give the top strand string motif of m1 enzyme include forward slash to show cut')
+
+    parser.add_argument('-m2', type=str, required=True,
+                        help='give the top strand string motif of m2 enzyme include forward slash to show cut')
+
+    parser.add_argument('-x1', type=int, required=False,
+                        help='adjustment if aligned reads do not start at canonical cut site')
+
+    parser.add_argument('-x2', type=int, required=False,
+                        help='adjustment if aligned reads do not start at canonical cut site')
+
+    parser.add_argument('-nosam', dest='nosam', action='store_true',
+                        help='skip writing motif only sam files')
+
     args = parser.parse_args()
 
     return args
 
 
+def get_motif_adjustments(args):
+    args.m1t = args.m1.index('/')
+    args.m1b = len(args.m1) - args.m1t - 1
+    args.m2t = args.m2.index('/')
+    args.m2b = len(args.m2) - args.m2t - 1
+    args.m1 = args.m1[:args.m1t] + args.m1[args.m1t + 1:]
+    args.m2 = args.m2[:args.m2t] + args.m2[args.m2t + 1:]
+
+
 def process_sam(sam, args):
+    sam_header = False
     with open(sam) as f:
         for idx, line in enumerate(f):
             if line.startswith('@'):
@@ -115,17 +169,26 @@ def process_sam(sam, args):
             else:
                 sam_header = idx
                 break
+    
+    if not sam_header:
+        return False
 
     #skip the header rows we just learned from the loop above and open the file
-    df = pd.read_csv(sam, skiprows=sam_header, usecols=range(11), sep='\s+', header=None)
+    cols = 'query flag ref start qual cigar pair pair_pos length seq score d12 d13 d14 d15 d16 d17 d18 d19 d20'.split()
+    df = pd.read_csv(sam, skiprows=sam_header, names=cols, sep='\s+', header=None)
     cols = 'query flag ref start qual cigar pair pair_pos length seq score'.split()
-    df.columns = cols
+    df = df[cols]
 
     # get the position where the mapped read ends
     df['end'] = df['start'] + df['seq'].str.len() - 1
 
     # apply boolean based on bitwise flag to reflect if first/second in pair
     df['forward'] = df['flag'].apply(lambda x: check_first_in_pair(x))
+
+    # apply boolean based on bitwise flag to reflect if first/second in pair
+    df['m_count'] = df['cigar'].apply(lambda x: count_matches(x))
+    df['bad_cigar'] = df['cigar'].apply(lambda x: bad_cigar(x))
+    df['m_percent'] = df['m_count'] / df['seq'].str.len() * 100
 
     # drop the unneeded sam columns
     df = df.drop(['flag', 'qual', 'pair', 'pair_pos', 'score'], axis=1)
@@ -142,11 +205,33 @@ def process_sam(sam, args):
     # merge the first/second read dataframes together so each row is a pair
     df = df_for.merge(df_rev, on="query")
 
+    # remove reads with poor mapping (as percentage of perfect matching bases)
+    df = df[(df['m_percent_x'] >= 99) & (df['m_percent_y'] >= 99)]
+
+    # remove reads with indels in query or reference alignment
+    df = df[(df['bad_cigar_x'] == 0) & (df['bad_cigar_y'] == 0)]
+
     # calculate where the ecori or msei cut site should be located, adjusted both
-    # for overhang and directionality
+    # for overhang and directionality, e.g.:
+    #  v
+    # GAATTC
+    # CTTAAG
+    #     ^
+    #  v
+    # TTAA
+    # AATT
+    #   ^
     # np.where is using a true/false condition for the last two elements
-    df['m1_pos'] = np.where(df['length_x']>0, df['start_x']-2, df['end_x']-5)
-    df['m2_pos'] = np.where(df['length_x']<0, df['start_y']-2, df['end_y']-3)
+    df['m1_pos'] = np.where(df['length_x']>0, df['start_x']-args.m1t-1, df['end_x']-args.m1b)
+    df['m2_pos'] = np.where(df['length_x']<0, df['start_y']-args.m2t-1, df['end_y']-args.m2b)
+
+    # adjust for reads beginning before or after canonical cut sites
+    if args.x1:
+        df['m1_pos'] = np.where(df['length_x']>0, df['m1_pos']+args.x1, df['m1_pos']-args.x1)
+
+    if args.x2:
+        df['m1_pos'] = np.where(df['length_x']>0, df['m1_pos']+args.x2, df['m1_pos']-args.x2)
+
     return df
 
 
@@ -198,7 +283,33 @@ def check_first_in_pair(flag):
     return bin(flag)[-7] == '1'
 
 
-def count_fragments(df, cut_sites):
+def count_matches(cigar):
+    '''
+    check cigar for numbers preceding M, sum them
+    '''
+    count_m = 0
+    m_split = [i for i in cigar.split('M') if i != '']
+
+    for i in m_split:
+        if i[-1].isnumeric():
+            count_m += int(re.findall(r"[^\W\d_]+|\d+", i)[-1])
+    return count_m
+
+
+def bad_cigar(cigar):
+    '''
+    check cigar for characters other than M or S
+    '''
+    status = 0
+    #fail_ls = ['I', 'D', 'N', 'H', 'X']
+    fail_ls = ['I', 'D']
+    for i in cigar:
+        if i in fail_ls:
+            status = 1
+    return status
+
+
+def count_fragments(df, cut_sites, args):
     '''
     for each simulated fragment, find the number of occurances from the sam file
     '''
@@ -212,14 +323,14 @@ def count_fragments(df, cut_sites):
         c_end = i[3]
         c_m1 = i[4]
         c_m2 = i[5]
-        if c_m1 == 'GAATTC':
+        if c_m1 == args.m1:
             tmp_df_top = df[(df['m1_pos']==c_start) & (df['m2_pos']==c_end) & (df['ref_x']==chrom)]
             count_ls.append(tmp_df_top.shape[0])
             if tmp_df_top.shape[0] == 0:
                 queries_ls.append([])
             else:
                 queries_ls.append(tmp_df_top['query'].to_list())
-        elif c_m1 == 'TTAA':
+        elif c_m1 == args.m2:
             tmp_df_bot = df[(df['m1_pos']==c_end) & (df['m2_pos']==c_start) & (df['ref_x']==chrom)]
             count_ls.append(tmp_df_bot.shape[0])
             if tmp_df_bot.shape[0] == 0:
@@ -263,7 +374,7 @@ def save_histogram(final_df, title):
     try:
         ax = sns.histplot(data=final_df, x='length', hue='genome',
                           weights=final_df['observed'], multiple="stack",
-                          binwidth=8, element="step")
+                          binwidth=6, element="step")
     except IndexError:
         print('singular read lengths, cannot produce histogram')
         return
@@ -342,7 +453,8 @@ def calculate_cut_efficiency(final_df, args):
         if k[0] < 450 and k[1] > 100:
             cut_prob_ls += v
 
-    if cut_prob_ls == []:
+    if len(cut_prob_ls) == 0:
+        print('insufficient data to calculate cut efficiency')
         return
 
     with open(f'{args.o}_cut_prob.txt', 'w') as o:

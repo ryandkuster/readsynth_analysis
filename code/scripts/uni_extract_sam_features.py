@@ -177,10 +177,11 @@ def process_sam(sam, args):
     #cols = 'query flag ref start qual cigar pair pair_pos length seq score'.split()
     #df.columns = cols
 
-    cols = 'query flag ref start qual cigar pair pair_pos length seq score d12 d13 d14 d15 d16 d17 d18 d19'.split()
+    cols = 'query flag ref start qual cigar pair pair_pos length seq score d12 d13 d14 d15 d16 d17 d18 d19 d20'.split()
     df = pd.read_csv(sam, skiprows=sam_header, names=cols, sep='\s+', header=None)
     cols = 'query flag ref start qual cigar pair pair_pos length seq score'.split()
     df = df[cols]
+    print(df)
 
     # get the position where the mapped read ends
     df['end'] = df['start'] + df['seq'].str.len() - 1
