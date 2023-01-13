@@ -1,0 +1,78 @@
+This is cutadapt 4.1 with Python 3.9.13
+Command line parameters: -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCACACTCTCNNNNNNATCTCGTATGCCGTCTTCTGCTTG -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGCAGCGAGAGTGTGTAGATCTCGGTGGTCGCCGTATCATT -o adapted_error_sim_metagenome_R1.fastq -p adapted_error_sim_metagenome_R2.fastq error_sim_metagenome_R1.fastq error_sim_metagenome_R2.fastq
+Processing paired-end reads on 1 core ...
+Finished in 46.45 s (15 µs/read; 4.09 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          3,169,174
+  Read 1 with adapter:                  68,672 (2.2%)
+  Read 2 with adapter:                  71,453 (2.3%)
+Pairs written (passing filters):     3,169,174 (100.0%)
+
+Total basepairs processed:   474,650,459 bp
+  Read 1:   237,324,517 bp
+  Read 2:   237,325,942 bp
+Total written (filtered):    474,176,280 bp (99.9%)
+  Read 1:   237,091,324 bp
+  Read 2:   237,084,956 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: AGATCGGAAGAGCACACGTCTGAACTCCAGTCACACTCTCNNNNNNATCTCGTATGCCGTCTTCTGCTTG; Type: regular 3'; Length: 70; Trimmed: 68672 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-39 bp: 3; 40-49 bp: 4; 50-59 bp: 5; 60-64 bp: 6
+
+Bases preceding removed adapters:
+  A: 37.1%
+  C: 25.2%
+  G: 19.3%
+  T: 18.5%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	47212	49518.3	0	47212
+4	18015	12379.6	0	18015
+5	2425	3094.9	0	2425
+6	509	773.7	0	509
+7	247	193.4	0	247
+8	38	48.4	0	38
+9	47	12.1	0	3 44
+10	123	3.0	1	0 123
+11	41	0.8	1	0 41
+12	14	0.2	1	0 14
+13	1	0.0	1	0 1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGCAGCGAGAGTGTGTAGATCTCGGTGGTCGCCGTATCATT; Type: regular 3'; Length: 74; Trimmed: 71453 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-39 bp: 3; 40-49 bp: 4; 50-59 bp: 5; 60-69 bp: 6; 70-74 bp: 7
+
+Bases preceding removed adapters:
+  A: 36.4%
+  C: 25.6%
+  G: 20.0%
+  T: 18.0%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	51175	49518.3	0	51175
+4	16742	12379.6	0	16742
+5	2254	3094.9	0	2254
+6	691	773.7	0	691
+7	263	193.4	0	263
+8	24	48.4	0	24
+9	90	12.1	0	18 72
+10	157	3.0	1	4 153
+11	31	0.8	1	0 31
+12	16	0.2	1	0 16
+13	9	0.0	1	0 9
+14	1	0.0	1	0 1

@@ -2,6 +2,8 @@ eval "$(conda shell.bash hook)"
 conda activate cutadapt
 conda list &> environment.log
 
+ln -s ../../../../raw_data/snipen_RMS/*[12].fastq ./
+
 for fastq in *_1.fastq
 do
   cutadapt \

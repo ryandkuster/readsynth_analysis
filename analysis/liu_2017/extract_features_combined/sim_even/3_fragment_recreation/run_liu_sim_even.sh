@@ -1,0 +1,1 @@
+python3 ../../../../../code/scripts/extract_combined_sam_features.py -i liu_sim_even_key.csv -p 0.25 -k 3 -o liu_sim_even -s 80 -m1 CATG/ -m2 A/CGT -nosam -sam ../2_bwa_mem_combined/error_sim_metagenome/SRR5298272_combined/SRR5298272_combined.sam

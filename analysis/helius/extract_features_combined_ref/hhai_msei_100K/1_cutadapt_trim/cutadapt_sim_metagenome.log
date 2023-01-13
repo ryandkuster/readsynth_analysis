@@ -1,0 +1,70 @@
+This is cutadapt 4.1 with Python 3.9.13
+Command line parameters: -a TCTGTCTCTTATACACATCTCCGAGCCCACGAGACATCTCGTATGCCGTCTTCTGCTTG -A CCTGTCTCTTATACACATCTGACGCTGCCGACGAGTGTAGATCTCGGTGGTCGCCGTATCATT -o adapted_sim_metagenome_R1.fastq -p adapted_sim_metagenome_R2.fastq sim_metagenome_R1.fastq sim_metagenome_R2.fastq
+Processing paired-end reads on 1 core ...
+Finished in 1.52 s (21 µs/read; 2.81 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:             71,253
+  Read 1 with adapter:                   1,926 (2.7%)
+  Read 2 with adapter:                   1,433 (2.0%)
+Pairs written (passing filters):        71,253 (100.0%)
+
+Total basepairs processed:    21,375,900 bp
+  Read 1:    10,687,950 bp
+  Read 2:    10,687,950 bp
+Total written (filtered):     21,364,402 bp (99.9%)
+  Read 1:    10,681,325 bp
+  Read 2:    10,683,077 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCTGTCTCTTATACACATCTCCGAGCCCACGAGACATCTCGTATGCCGTCTTCTGCTTG; Type: regular 3'; Length: 59; Trimmed: 1926 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-39 bp: 3; 40-49 bp: 4; 50-59 bp: 5
+
+Bases preceding removed adapters:
+  A: 28.1%
+  C: 21.2%
+  G: 14.4%
+  T: 36.2%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	1301	1113.3	0	1301
+4	496	278.3	0	496
+5	88	69.6	0	88
+6	16	17.4	0	16
+7	15	4.3	0	15
+9	3	0.3	0	0 3
+10	7	0.1	1	0 7
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: CCTGTCTCTTATACACATCTGACGCTGCCGACGAGTGTAGATCTCGGTGGTCGCCGTATCATT; Type: regular 3'; Length: 63; Trimmed: 1433 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-39 bp: 3; 40-49 bp: 4; 50-59 bp: 5; 60-63 bp: 6
+
+Bases preceding removed adapters:
+  A: 27.0%
+  C: 14.2%
+  G: 19.1%
+  T: 39.6%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	1013	1113.3	0	1013
+4	322	278.3	0	322
+5	69	69.6	0	69
+6	20	17.4	0	20
+7	3	4.3	0	3
+9	1	0.3	0	0 1
+10	4	0.1	1	0 4
+11	1	0.0	1	0 1

@@ -1,0 +1,1 @@
+python3 ../../../../../code/scripts/extract_combined_sam_features.py -i sim_10M_post_bracken_key.csv -p 0.25 -k 3 -o liu_sim_10M_post_bracken -s 80 -m1 CATG/ -m2 A/CGT -nosam -sam ../2_bwa_mem_combined/error_sim_metagenome/liu_combined_10M_post_bracken/liu_combined_10M_post_bracken.sam

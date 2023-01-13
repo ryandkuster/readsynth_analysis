@@ -1,0 +1,149 @@
+This is cutadapt 4.1 with Python 3.9.13
+Command line parameters: -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCACACTCTCNNNNNNATCTCGTATGCCGTCTTCTGCTTG -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGCAGCGAGAGTGTGTAGATCTCGGTGGTCGCCGTATCATT -o adapted_trimmed_se.SRR5298272_R1.fastq -p adapted_trimmed_se.SRR5298272_R2.fastq trimmed_se.SRR5298272_R1.fastq trimmed_se.SRR5298272_R2.fastq
+Processing paired-end reads on 1 core ...
+Finished in 65.97 s (21 µs/read; 2.79 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          3,069,917
+  Read 1 with adapter:                 135,090 (4.4%)
+  Read 2 with adapter:                 123,369 (4.0%)
+Pairs written (passing filters):     3,069,917 (100.0%)
+
+Total basepairs processed:   457,957,635 bp
+  Read 1:   225,934,564 bp
+  Read 2:   232,023,071 bp
+Total written (filtered):    456,015,252 bp (99.6%)
+  Read 1:   224,934,913 bp
+  Read 2:   231,080,339 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: AGATCGGAAGAGCACACGTCTGAACTCCAGTCACACTCTCNNNNNNATCTCGTATGCCGTCTTCTGCTTG; Type: regular 3'; Length: 70; Trimmed: 135090 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-39 bp: 3; 40-49 bp: 4; 50-59 bp: 5; 60-64 bp: 6
+
+Bases preceding removed adapters:
+  A: 25.0%
+  C: 22.9%
+  G: 43.8%
+  T: 8.3%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	77069	47967.5	0	77069
+4	20067	11991.9	0	20067
+5	1287	2998.0	0	1287
+6	2699	749.5	0	2699
+7	1844	187.4	0	1844
+8	1197	46.8	0	1197
+9	1648	11.7	0	1549 99
+10	1679	2.9	1	1378 301
+11	1315	0.7	1	1176 139
+12	2869	0.2	1	2832 37
+13	13	0.0	1	1 12
+14	2635	0.0	1	2601 34
+15	16	0.0	1	3 13
+16	2264	0.0	1	2222 42
+17	12	0.0	1	0 12
+18	1228	0.0	1	1196 32
+19	4582	0.0	1	4510 72
+20	14	0.0	2	3 9 2
+21	1	0.0	2	0 0 1
+22	12	0.0	2	0 9 3
+23	943	0.0	2	903 38 2
+24	2769	0.0	2	2723 42 4
+25	14	0.0	2	1 10 3
+26	914	0.0	2	884 24 6
+27	841	0.0	2	814 25 2
+28	11	0.0	2	1 7 3
+29	666	0.0	2	643 18 5
+30	765	0.0	3	723 33 6 3
+31	1380	0.0	3	1344 31 5
+32	15	0.0	3	0 13 2
+33	1331	0.0	3	1302 23 5 1
+34	17	0.0	3	2 11 2 2
+35	409	0.0	3	390 7 12
+36	567	0.0	3	0 541 15 11
+37	445	0.0	3	0 0 435 10
+38	560	0.0	3	0 0 2 555 3
+39	356	0.0	3	0 0 0 344 12
+40	35	0.0	4	0 0 0 33 2
+41	118	0.0	4	0 0 0 113 5
+42	155	0.0	4	0 0 0 146 9
+43	154	0.0	4	0 0 0 149 5
+44	52	0.0	4	0 0 0 50 2
+45	70	0.0	4	0 0 0 66 4
+46	24	0.0	4	0 0 0 8 16
+47	8	0.0	4	0 0 0 0 8
+48	11	0.0	4	0 0 0 0 11
+59	1	0.0	5	0 0 0 0 1
+60	1	0.0	6	0 0 0 0 1
+63	1	0.0	6	0 0 0 0 1
+71	1	0.0	6	0 0 0 0 1
+74	5	0.0	6	0 0 0 0 0 2 3
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGCAGCGAGAGTGTGTAGATCTCGGTGGTCGCCGTATCATT; Type: regular 3'; Length: 74; Trimmed: 123369 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-39 bp: 3; 40-49 bp: 4; 50-59 bp: 5; 60-69 bp: 6; 70-74 bp: 7
+
+Bases preceding removed adapters:
+  A: 24.3%
+  C: 52.2%
+  G: 15.2%
+  T: 8.4%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	65082	47967.5	0	65082
+4	22657	11991.9	0	22657
+5	882	2998.0	0	882
+6	2045	749.5	0	2045
+7	1588	187.4	0	1588
+8	1259	46.8	0	1259
+9	1675	11.7	0	1542 133
+10	1513	2.9	1	1372 141
+11	1261	0.7	1	1181 80
+12	2880	0.2	1	2831 49
+13	8	0.0	1	0 8
+14	1180	0.0	1	1169 11
+15	2704	0.0	1	2643 61
+16	6	0.0	1	1 5
+17	1022	0.0	1	1009 13
+18	1207	0.0	1	1165 42
+19	1191	0.0	1	1161 30
+20	1000	0.0	2	977 20 3
+21	1202	0.0	2	1166 31 5
+22	1221	0.0	2	1177 41 3
+23	922	0.0	2	903 16 3
+24	1009	0.0	2	980 24 5
+25	1012	0.0	2	979 30 3
+26	769	0.0	2	749 19 1
+27	914	0.0	2	889 22 3
+28	843	0.0	2	815 23 5
+29	661	0.0	2	636 23 2
+30	757	0.0	3	721 25 7 4
+31	716	0.0	3	681 27 6 2
+32	683	0.0	3	653 23 6 1
+33	898	0.0	3	843 42 9 4
+34	604	0.0	3	254 327 16 7
+35	453	0.0	3	28 329 92 4
+36	514	0.0	3	4 117 329 64
+37	400	0.0	3	1 28 182 189
+38	167	0.0	3	1 6 45 112 3
+39	152	0.0	3	0 1 34 73 44
+40	216	0.0	4	0 0 12 76 128
+41	65	0.0	4	0 0 0 13 52
+42	27	0.0	4	0 0 0 1 26
+43	1	0.0	4	0 0 0 0 1
+75	1	0.0	7	0 0 0 0 0 0 1
+76	2	0.0	7	0 0 0 0 0 0 0 2

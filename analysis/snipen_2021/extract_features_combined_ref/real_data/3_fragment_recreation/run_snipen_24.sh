@@ -1,0 +1,1 @@
+python3 ../../../../../code/scripts/extract_combined_sam_features.py -i snipen_key.csv -k 3 -o snipen_24 -s 80 -m1 G/AATTC -m2 T/TAA -nosam -sam ../2_bwa_mem_combined/SRR10199724/snipen_combined/snipen_combined.sam

@@ -1,0 +1,90 @@
+This is cutadapt 4.1 with Python 3.9.13
+Command line parameters: -a TCTGTCTCTTATACACATCTCCGAGCCCACGAGACATCTCGTATGCCGTCTTCTGCTTG -A CCTGTCTCTTATACACATCTGACGCTGCCGACGAGTGTAGATCTCGGTGGTCGCCGTATCATT -o adapted_sim_metagenome_R1.fastq -p adapted_sim_metagenome_R2.fastq sim_metagenome_R1.fastq sim_metagenome_R2.fastq
+Processing paired-end reads on 1 core ...
+Finished in 1.79 s (20 µs/read; 2.98 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:             88,533
+  Read 1 with adapter:                   2,226 (2.5%)
+  Read 2 with adapter:                   1,902 (2.1%)
+Pairs written (passing filters):        88,533 (100.0%)
+
+Total basepairs processed:    26,559,900 bp
+  Read 1:    13,279,950 bp
+  Read 2:    13,279,950 bp
+Total written (filtered):     26,544,647 bp (99.9%)
+  Read 1:    13,271,687 bp
+  Read 2:    13,272,960 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCTGTCTCTTATACACATCTCCGAGCCCACGAGACATCTCGTATGCCGTCTTCTGCTTG; Type: regular 3'; Length: 59; Trimmed: 2226 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-39 bp: 3; 40-49 bp: 4; 50-59 bp: 5
+
+Bases preceding removed adapters:
+  A: 34.3%
+  C: 20.6%
+  G: 12.8%
+  T: 32.4%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	1373	1383.3	0	1373
+4	614	345.8	0	614
+5	151	86.5	0	151
+6	25	21.6	0	25
+7	5	5.4	0	5
+9	9	0.3	0	1 8
+10	17	0.1	1	0 17
+11	6	0.0	1	0 6
+12	5	0.0	1	0 5
+13	1	0.0	1	0 1
+14	3	0.0	1	0 3
+15	6	0.0	1	0 6
+16	1	0.0	1	0 1
+18	5	0.0	1	0 5
+21	2	0.0	2	0 2
+24	2	0.0	2	0 2
+30	1	0.0	3	0 1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: CCTGTCTCTTATACACATCTGACGCTGCCGACGAGTGTAGATCTCGGTGGTCGCCGTATCATT; Type: regular 3'; Length: 63; Trimmed: 1902 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-39 bp: 3; 40-49 bp: 4; 50-59 bp: 5; 60-63 bp: 6
+
+Bases preceding removed adapters:
+  A: 22.5%
+  C: 12.8%
+  G: 22.1%
+  T: 42.6%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	1345	1383.3	0	1345
+4	338	345.8	0	338
+5	89	86.5	0	89
+6	63	21.6	0	63
+7	12	5.4	0	12
+8	3	1.4	0	3
+9	19	0.3	0	1 18
+10	3	0.1	1	3
+11	8	0.0	1	6 2
+12	1	0.0	1	1
+13	1	0.0	1	1
+14	3	0.0	1	3
+15	6	0.0	1	6
+16	1	0.0	1	1
+18	5	0.0	1	5
+21	2	0.0	2	2
+24	2	0.0	2	2
+30	1	0.0	3	1

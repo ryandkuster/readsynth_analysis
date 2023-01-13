@@ -1,7 +1,7 @@
 This is cutadapt 4.1 with Python 3.9.13
 Command line parameters: -a CTCAGGACTCATCAGATCGGAAGAGCACACGTCTGAACTCCAGTCACCACGATATCTCGTATGCCGTCTTCTGCTTG -A GGTACGCAGTCCGTACGAGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT -o adapted_SRR10199724_1.fastq -p adapted_SRR10199724_2.fastq SRR10199724_1.fastq SRR10199724_2.fastq
 Processing paired-end reads on 1 core ...
-Finished in 54.38 s (34 µs/read; 1.77 M reads/minute).
+Finished in 55.05 s (34 µs/read; 1.75 M reads/minute).
 
 === Summary ===
 

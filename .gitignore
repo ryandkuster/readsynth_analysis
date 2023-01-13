@@ -9,20 +9,24 @@ __pycache__/*
 *fastq.gz
 *fq
 *fastq.gz
+*csv
 
 analysis/
+!analysis/README.md
 !analysis/*/*/*.sh
 !analysis/*/*/*/*.sh
+!analysis/*/*/*/*/*.sh
+!analysis/*/*/*/*/*/*.sh
+!analysis/*/*/*/*/*/*/*.sh
 !analysis/*/*/*.log
 !analysis/*/*/*/*.log
+!analysis/*/*/*/*/*.log
+!analysis/*/*/*/*/*/*.log
+!analysis/*/*/*/*/*/*/*.log
 
-code/kraken2
-code/Bracken/
-code/salmon-1.5.2_linux_x86_64/
 code/scripts/__pycache__/
 code/scripts/count_read_duplicates.py
 
-preliminary_analyses.tar.gz
-
 raw_data/
 !raw_data/adapters
+
