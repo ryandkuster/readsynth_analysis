@@ -10,6 +10,7 @@ __pycache__/*
 *fq
 *fastq.gz
 *csv
+*tif
 
 analysis/
 !analysis/README.md

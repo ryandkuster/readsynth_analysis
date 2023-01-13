@@ -8,26 +8,32 @@
   - snipen_2021
   - snipen_2021_benchmark
   - sun_2022_benchmark
+
 - code/ **(specific scripts used for analyses)**
   - scripts
+
 - misc/
   - visuals/ **(visuals presented in this markdown file)**
+
 - notebooks
   - compare_depths
   - compare_kraken
   - cut_probability
   - error
+  - extract_read_features
   - fragment_summaries
   - performance
+  - plot_helius_results
+  - seq_distances
+
 - raw_data/ **(unprocessed data)**
-  - adapters/
-  - barcelona_16S/
-  - kraken_dbs/
-  - large_metagenome/
-  - liu_RMS/
-  - ravi_16S/
-  - snipen_RMS/
-  - sun_2bRADM/
+  - adapters
+  - helius
+  - kraken_dbs
+  - liu_RMS
+  - snipen_RMS
+  - sun_2bRADM
+
 - README.md **(you're reading me)**
 
 # **raw_data**
