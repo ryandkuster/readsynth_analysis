@@ -6,7 +6,7 @@ for query in ../3_samtools/SRR* ; do
   echo $query_dir
   mkdir $query_dir
   cd $query_dir
-  for genome in /pickett_flora/projects/read_simulation/raw_data/snipen_RMS/mock_community_ref_genomes/*fna ; do
+  for genome in ../../../../raw_data/snipen_RMS/mock_community_ref_genomes/*fna ; do
     genome_name=$(basename $genome)
     genome_name=${genome_name%%.fna}
     mkdir $genome_name

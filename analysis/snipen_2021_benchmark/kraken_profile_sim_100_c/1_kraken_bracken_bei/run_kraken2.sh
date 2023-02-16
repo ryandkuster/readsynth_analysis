@@ -13,7 +13,7 @@ for query in ../../extract_features_sim_100_c/1_cutadapt_trim/trimmed*1.fastq ; 
   echo $R2
   mkdir $query_dir
   cd $query_dir
-  kraken2 --paired --threads 2 --report 2022_07_11.kreport --classified-out cseqs#.fq --unclassified-out useqs#.fq --db /pickett_flora/projects/read_simulation/raw_data/kraken_dbs/snipen_bei_db $R1 $R2 > 2022_07_11_run.txt 2> kraken2.log 
-  bracken -d /pickett_flora/projects/read_simulation/raw_data/kraken_dbs/snipen_bei_db -i 2022_07_11.kreport -o 2022_07_11.bracken -r 150 -l S -t 10 2> bracken.log
+  kraken2 --paired --threads 2 --report 2022_07_11.kreport --classified-out cseqs#.fq --unclassified-out useqs#.fq --db ../../../../raw_data/kraken_dbs/snipen_bei_db $R1 $R2 > 2022_07_11_run.txt 2> kraken2.log 
+  bracken -d ../../../../raw_data/kraken_dbs/snipen_bei_db -i 2022_07_11.kreport -o 2022_07_11.bracken -r 150 -l S -t 10 2> bracken.log
   cd ..
 done

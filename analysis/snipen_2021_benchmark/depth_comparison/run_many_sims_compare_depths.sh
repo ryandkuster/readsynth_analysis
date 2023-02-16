@@ -1,4 +1,4 @@
-python3 /pickett_flora/projects/read_simulation/code/scripts/compare_samtools_depths.py -d \
+python3 ../../../code/scripts/compare_samtools_depths.py -d \
   mo_real_1_combined_depths.tsv \
   mo_real_2_combined_depths.tsv \
   mo_real_3_combined_depths.tsv \

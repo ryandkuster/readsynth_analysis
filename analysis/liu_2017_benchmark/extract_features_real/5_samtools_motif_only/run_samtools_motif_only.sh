@@ -7,7 +7,7 @@ for query in ../2_bwa_mem/SRR* ; do
   echo $query_dir
   mkdir $query_dir
   cd $query_dir
-  for genome in /pickett_flora/projects/read_simulation/raw_data/snipen_RMS/mock_community_ref_genomes/*fna ; do
+  for genome in ../../../../raw_data/snipen_RMS/mock_community_ref_genomes/*fna ; do
     genome_name=$(basename $genome)
     genome_name=${genome_name%%.fna}
     mkdir $genome_name
@@ -33,7 +33,7 @@ for query in ../2_bwa_mem/SRR* ; do
     
     conda deactivate
     # use custom python script to narrow sam file to only those reads aligning perfectly to motif sites from simulation
-    python3 /pickett_flora/projects/read_simulation/code/scripts/filter_sam_by_motif_sites.py \
+    python3 ../../../../code/scripts/filter_sam_by_motif_sites.py \
         sort_fixmate_${genome_name}.sam \
         ../../../4_fragment_recreation/cut_sites/cut_sites_${genome_name}.fna.csv
 

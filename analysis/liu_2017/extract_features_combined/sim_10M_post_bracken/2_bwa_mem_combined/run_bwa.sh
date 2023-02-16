@@ -13,7 +13,7 @@ for query in ../1_cutadapt_trim/trimmed_se.*1.fastq ; do
   echo $R2
   mkdir $query_dir
   cd $query_dir
-  for genome in /pickett_flora/projects/metagenome_abundances/raw_data/liu_RMS/mock_community_estimate/10M_bracken_profile/genomes/*fna ; do
+  for genome in ../../../../../raw_data/liu_RMS/mock_community_estimate/10M_bracken_profile/genomes/*fna ; do
     echo $genome
     genome_name=$(basename $genome)
     genome_name=${genome_name%%.fna}

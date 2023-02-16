@@ -7,7 +7,7 @@ for query in ../2_bwa_mem/mock* ; do
   echo $query_dir
   mkdir $query_dir
   cd $query_dir
-  for genome in /pickett_flora/projects/read_simulation/raw_data/sun_2bRADM/mock_community_ref_genomes/atcc_msa_1002/*fasta ; do
+  for genome in ../../../../raw_data/sun_2bRADM/mock_community_ref_genomes/atcc_msa_1002/*fasta ; do
     genome_name=$(basename $genome)
     genome_name=${genome_name%%.fasta}
     mkdir $genome_name

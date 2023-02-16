@@ -7,7 +7,7 @@ for query in ../2_bwa_mem/trimmed_se.* ; do
   echo $query_dir
   mkdir $query_dir
   cd $query_dir
-  for genome in /pickett_flora/projects/metagenome_abundances/raw_data/liu_RMS/mock_community_estimate/SRR5298272_genomes/*fna ; do
+  for genome in ../../../../raw_data/liu_RMS/mock_community_estimate/SRR5298272_genomes/*fna ; do
     genome_name=$(basename $genome)
     genome_name=${genome_name%%.fna}
     mkdir $genome_name
